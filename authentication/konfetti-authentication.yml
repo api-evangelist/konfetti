@@ -1,0 +1,118 @@
+generated: '2026-07-19'
+method: derived
+source: >-
+  openapi/konfetti-store-openapi.yml, plus live probes of
+  https://api.gokonfetti.com/v1 on 2026-07-19 and the Authorization-header
+  handling in the publicly served gokonfetti.com Nuxt bundles. konfetti
+  publishes no authentication documentation, so this profile is observed
+  behaviour rather than a provider reference.
+description: >-
+  How authentication works on the konfetti Store API. Three postures coexist:
+  the /v1/store/* catalog is fully public, /v1/checkout/* and /v1/user/* require
+  a Bearer access token, and tokens are issued by an OAuth 2.0 token endpoint
+  that has no publicly documented client-registration path.
+
+summary:
+  types:
+  - none
+  - http
+  - oauth2
+  public_read: true
+  third_party_access: >-
+    Not available. The OAuth 2.0 token endpoint is live but konfetti publishes
+    no client registration, no grant-type list, no scope reference and no
+    RFC 8414 metadata, so there is no documented route for a third party to
+    obtain credentials.
+
+schemes:
+- name: none
+  type: none
+  description: >-
+    The entire /v1/store/* catalog surface — events, event detail, similar
+    events, categories, and /v1/categories — answered HTTP 200 with no
+    credentials at all. This is an unauthenticated public read API in practice,
+    though konfetti does not describe it as one and publishes no terms covering
+    its use.
+  applies_to:
+  - GET /v1/store/events
+  - GET /v1/store/events/{permalink}
+  - GET /v1/store/events/{permalink}/similar
+  - GET /v1/store/categories
+  - GET /v1/categories
+  sources:
+  - live probe 2026-07-19
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  in: header
+  header: Authorization
+  description: >-
+    'Authorization: Bearer <access_token>'. The first-party client obtains a
+    token, then sends it on every protected call alongside
+    'Content-Type: application/json'.
+  applies_to:
+  - GET /v1/user/profile
+  - GET /v1/checkout/orders
+  failure_mode: >-
+    A missing or expired token produces HTTP 302 redirecting to
+    https://api.gokonfetti.com/login — NOT a 401. Clients must disable
+    redirect-following on API calls or they will parse an HTML login page as
+    JSON.
+  sources:
+  - openapi/konfetti-store-openapi.yml
+  - live probe 2026-07-19
+- name: oauth2
+  type: oauth2
+  token_endpoint: https://api.gokonfetti.com/v1/oauth/token
+  flows: []
+  description: >-
+    A standard OAuth 2.0 token endpoint, confirmed by probing: an empty POST
+    returned HTTP 400 with the League OAuth2 Server error envelope
+    {"error":"unsupported_grant_type","error_description":"The authorization
+    grant type is not supported by the authorization server.","hint":"Check
+    that all required parameters have been provided"}. League OAuth2 Server is
+    the library behind Laravel Passport, which is consistent with the
+    Apiato/Laravel stack serving the API.
+  observed:
+    get_status: 405
+    empty_post_status: 400
+    error_family: RFC 6749 section 5.2
+  not_published:
+  - authorization endpoint
+  - supported grant types
+  - client registration process
+  - scope reference (no scopes are declared anywhere)
+  - RFC 8414 authorization server metadata (/.well-known/oauth-authorization-server returns 404)
+  - PKCE or device-authorization guidance
+  sources:
+  - openapi/konfetti-store-openapi.yml
+  - live probe 2026-07-19
+
+account_creation:
+  endpoint: POST /v1/register
+  required_fields: [email, password, first_name]
+  evidence: >-
+    Probing with an empty body returned HTTP 422 naming exactly these three
+    required fields, in the request locale.
+  note: >-
+    This creates a consumer account for the marketplace, not an API client
+    credential. Partner (supplier) accounts are provisioned by konfetti through
+    the partner sign-up flow and used at backoffice.gokonfetti.com.
+
+transport_security:
+  tls: TLSv1.3 on api.gokonfetti.com
+  hsts: false
+  detail: security/konfetti-domain-security.yml
+
+gaps:
+- No 401 on authentication failure — a 302 HTML redirect is returned instead.
+- No scopes, so tokens cannot be least-privileged.
+- No token introspection or revocation endpoint published.
+- No API key alternative for server-to-server use.
+- No RFC 8414 or OpenID Connect discovery document.
+
+related:
+  openapi: openapi/konfetti-store-openapi.yml
+  conventions: conventions/konfetti-conventions.yml
+  errors: errors/konfetti-problem-types.yml
+  well_known: well-known/konfetti-well-known.yml
