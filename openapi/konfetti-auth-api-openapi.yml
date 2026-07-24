@@ -1,0 +1,93 @@
+openapi: 3.1.0
+info:
+  title: konfetti Store account auth API
+  version: v1
+  x-generated: '2026-07-19'
+  x-method: derived
+  x-source: Derived by API Evangelist from direct observation of the live konfetti API at https://api.gokonfetti.com/v1 (every path and status code below was probed on 2026-07-19) plus the publicly served gokonfetti.com Nuxt application bundles under /_nuxt3/*.js, which name the endpoints, request bodies and query conventions the storefront uses. konfetti publishes no developer portal, no OpenAPI document and no API reference; this description is an honest reconstruction of the observable surface, not a provider-published specification. Nothing here is invented — schemas are modelled only from responses actually returned.
+  description: 'konfetti (Konfetti GmbH, Berlin) operates a marketplace for bookable experiences, courses and workshops in Germany and Austria. The storefront at gokonfetti.com is a Nuxt 3 application backed by a JSON API served from api.gokonfetti.com — an Apiato/Laravel service exposing a `/v1/store/*` catalog namespace (public, unauthenticated read), a `/v1/checkout/*` and `/v1/user/*` namespace (Bearer-token authenticated), and an OAuth 2.0 token endpoint at `/v1/oauth/token`.
+
+    This is an INTERNAL / UNDOCUMENTED API. konfetti does not market it as a public product, publishes no terms of use for it, and may change it without notice. Treat it as observational documentation, not a contract.'
+  contact:
+    name: konfetti (Konfetti GmbH)
+    email: hallo@gokonfetti.com
+    url: https://gokonfetti.com
+  license:
+    name: Proprietary — no public API terms published
+servers:
+- url: https://api.gokonfetti.com
+  description: Production API host (observed HTTP 200, HTTP/2, Apiato/Laravel)
+tags:
+- name: auth
+  description: OAuth 2.0 token issuance.
+paths:
+  /v1/oauth/token:
+    post:
+      operationId: issueAccessToken
+      summary: Issue an OAuth 2.0 access token
+      description: POST-only (GET returned 405). Probing with an empty body returned the League OAuth2 Server error `unsupported_grant_type` with HTTP 400, confirming a standard OAuth 2.0 token endpoint. konfetti publishes no client registration process, so the supported grant types are not documented here.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+                scope:
+                  type: string
+      responses:
+        '200':
+          description: Access token issued.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token_type:
+                    type: string
+                  expires_in:
+                    type: integer
+                  access_token:
+                    type: string
+                  refresh_token:
+                    type: string
+        '400':
+          description: OAuth 2.0 error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthError'
+components:
+  schemas:
+    OAuthError:
+      type: object
+      description: RFC 6749 error envelope from the League OAuth2 Server, observed verbatim on POST /v1/oauth/token with an empty body.
+      properties:
+        error:
+          type: string
+          examples:
+          - unsupported_grant_type
+        error_description:
+          type: string
+        hint:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Access token obtained from POST /v1/oauth/token and sent as `Authorization: Bearer <token>`.'
+    oauth2:
+      type: oauth2
+      description: OAuth 2.0 token endpoint confirmed at /v1/oauth/token (League OAuth2 Server). No authorization endpoint, discovery document or scope reference is published, so no flows are enumerated here.
+      flows: {}

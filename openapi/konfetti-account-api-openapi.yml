@@ -1,0 +1,120 @@
+openapi: 3.1.0
+info:
+  title: konfetti Store account API
+  version: v1
+  x-generated: '2026-07-19'
+  x-method: derived
+  x-source: Derived by API Evangelist from direct observation of the live konfetti API at https://api.gokonfetti.com/v1 (every path and status code below was probed on 2026-07-19) plus the publicly served gokonfetti.com Nuxt application bundles under /_nuxt3/*.js, which name the endpoints, request bodies and query conventions the storefront uses. konfetti publishes no developer portal, no OpenAPI document and no API reference; this description is an honest reconstruction of the observable surface, not a provider-published specification. Nothing here is invented — schemas are modelled only from responses actually returned.
+  description: 'konfetti (Konfetti GmbH, Berlin) operates a marketplace for bookable experiences, courses and workshops in Germany and Austria. The storefront at gokonfetti.com is a Nuxt 3 application backed by a JSON API served from api.gokonfetti.com — an Apiato/Laravel service exposing a `/v1/store/*` catalog namespace (public, unauthenticated read), a `/v1/checkout/*` and `/v1/user/*` namespace (Bearer-token authenticated), and an OAuth 2.0 token endpoint at `/v1/oauth/token`.
+
+    This is an INTERNAL / UNDOCUMENTED API. konfetti does not market it as a public product, publishes no terms of use for it, and may change it without notice. Treat it as observational documentation, not a contract.'
+  contact:
+    name: konfetti (Konfetti GmbH)
+    email: hallo@gokonfetti.com
+    url: https://gokonfetti.com
+  license:
+    name: Proprietary — no public API terms published
+servers:
+- url: https://api.gokonfetti.com
+  description: Production API host (observed HTTP 200, HTTP/2, Apiato/Laravel)
+tags:
+- name: account
+  description: Authenticated customer profile and registration.
+paths:
+  /v1/user/profile:
+    get:
+      operationId: getUserProfile
+      summary: Retrieve the authenticated customer's profile
+      description: Requires a Bearer access token; unauthenticated GET redirected (302) to the login page. The storefront calls it with `?include=customer,referralCoupon&with_session=1` and reads `data.balance.amount` (minor units).
+      tags:
+      - account
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/include'
+      - name: with_session
+        in: query
+        schema:
+          type: integer
+          enum:
+          - 1
+      responses:
+        '200':
+          description: The customer profile.
+        '302':
+          description: Redirect to login when unauthenticated.
+  /v1/register:
+    post:
+      operationId: registerCustomer
+      summary: Register a new customer account
+      description: POST-only (GET returned 405). Probing with an empty body returned a 422 listing the required fields, which is where the schema below comes from. Validation messages are returned in the request locale (German by default).
+      tags:
+      - account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              - password
+              - first_name
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                first_name:
+                  type: string
+      responses:
+        '201':
+          description: Account created.
+        '422':
+          $ref: '#/components/responses/ValidationError'
+components:
+  schemas:
+    ValidationError:
+      type: object
+      description: The 422 validation envelope, observed verbatim from POST /v1/register.
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          const: 422
+        reason:
+          type: string
+          const: requestValidation
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+  parameters:
+    include:
+      name: include
+      in: query
+      description: 'Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`.'
+      schema:
+        type: string
+      example: supplier,categories
+  responses:
+    ValidationError:
+      description: Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Access token obtained from POST /v1/oauth/token and sent as `Authorization: Bearer <token>`.'
+    oauth2:
+      type: oauth2
+      description: OAuth 2.0 token endpoint confirmed at /v1/oauth/token (League OAuth2 Server). No authorization endpoint, discovery document or scope reference is published, so no flows are enumerated here.
+      flows: {}

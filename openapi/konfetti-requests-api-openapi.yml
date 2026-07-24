@@ -1,0 +1,196 @@
+openapi: 3.1.0
+info:
+  title: konfetti Store account requests API
+  version: v1
+  x-generated: '2026-07-19'
+  x-method: derived
+  x-source: Derived by API Evangelist from direct observation of the live konfetti API at https://api.gokonfetti.com/v1 (every path and status code below was probed on 2026-07-19) plus the publicly served gokonfetti.com Nuxt application bundles under /_nuxt3/*.js, which name the endpoints, request bodies and query conventions the storefront uses. konfetti publishes no developer portal, no OpenAPI document and no API reference; this description is an honest reconstruction of the observable surface, not a provider-published specification. Nothing here is invented — schemas are modelled only from responses actually returned.
+  description: 'konfetti (Konfetti GmbH, Berlin) operates a marketplace for bookable experiences, courses and workshops in Germany and Austria. The storefront at gokonfetti.com is a Nuxt 3 application backed by a JSON API served from api.gokonfetti.com — an Apiato/Laravel service exposing a `/v1/store/*` catalog namespace (public, unauthenticated read), a `/v1/checkout/*` and `/v1/user/*` namespace (Bearer-token authenticated), and an OAuth 2.0 token endpoint at `/v1/oauth/token`.
+
+    This is an INTERNAL / UNDOCUMENTED API. konfetti does not market it as a public product, publishes no terms of use for it, and may change it without notice. Treat it as observational documentation, not a contract.'
+  contact:
+    name: konfetti (Konfetti GmbH)
+    email: hallo@gokonfetti.com
+    url: https://gokonfetti.com
+  license:
+    name: Proprietary — no public API terms published
+servers:
+- url: https://api.gokonfetti.com
+  description: Production API host (observed HTTP 200, HTTP/2, Apiato/Laravel)
+tags:
+- name: requests
+  description: Lead-capture endpoints for date and private-event requests.
+paths:
+  /v1/store/events/{id}/subscribe:
+    post:
+      operationId: subscribeToEvent
+      summary: Subscribe an email address to an experience
+      description: POST-only (GET returned 405). Used for back-in-stock / new-date notification capture. Response carries a `data.sha256_email_address` hash the storefront forwards to its analytics layer.
+      tags:
+      - requests
+      parameters:
+      - $ref: '#/components/parameters/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                external:
+                  type: boolean
+                  description: True when the request originates from an embedded widget.
+      responses:
+        '200':
+          description: Subscription recorded.
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+  /v1/store/date-requests:
+    post:
+      operationId: createDateRequest
+      summary: Request alternative dates for an experience
+      description: Lead capture for "no date suits me" enquiries. Body shape taken verbatim from the storefront bundle. GET redirected (302) to the API host login page.
+      tags:
+      - requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_description_id:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                phone:
+                  type: string
+                number_of_tickets:
+                  type: integer
+                date_type:
+                  type: string
+                  enum:
+                  - PUBLIC
+                  - PRIVATE
+                last_page_seen:
+                  type: string
+                  format: uri
+                dates:
+                  type: array
+                  description: Requested dates, formatted `YYYY-MM-DD HH:MM`.
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Date request created.
+  /v1/store/date-requests/{id}/similar-events:
+    get:
+      operationId: listDateRequestSimilarEvents
+      summary: List experiences similar to a submitted date request
+      tags:
+      - requests
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/include'
+      responses:
+        '200':
+          description: Similar events for the date request.
+  /v1/store/private-event-requests:
+    post:
+      operationId: createPrivateEventRequest
+      summary: Request a private / corporate team event
+      description: POST-only (GET returned 405). Body shape taken verbatim from the storefront bundle.
+      tags:
+      - requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                company_name:
+                  type: string
+                city:
+                  type: string
+                event_description_id:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                phone:
+                  type: string
+                number_of_tickets:
+                  type: integer
+                date:
+                  type: string
+                  description: Preferred date, `YYYY-MM-DD HH:MM:SS`.
+                preferred_location:
+                  type: string
+                last_page_seen:
+                  type: string
+                  format: uri
+      responses:
+        '201':
+          description: Private event request created.
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+  /v1/store/customers/subscribe-newsletter:
+    post:
+      operationId: subscribeNewsletter
+      summary: Subscribe an email address to the konfetti newsletter
+      tags:
+      - requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Newsletter subscription recorded.
+components:
+  parameters:
+    include:
+      name: include
+      in: query
+      description: 'Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`.'
+      schema:
+        type: string
+      example: supplier,categories
+    id:
+      name: id
+      in: path
+      required: true
+      description: Six-character konfetti resource id (e.g. `xyn62z`).
+      schema:
+        type: string
+  responses:
+    MethodNotAllowed:
+      description: HTTP method not allowed for this path.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Access token obtained from POST /v1/oauth/token and sent as `Authorization: Bearer <token>`.'
+    oauth2:
+      type: oauth2
+      description: OAuth 2.0 token endpoint confirmed at /v1/oauth/token (League OAuth2 Server). No authorization endpoint, discovery document or scope reference is published, so no flows are enumerated here.
+      flows: {}
