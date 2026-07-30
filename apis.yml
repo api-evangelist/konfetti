@@ -1,22 +1,218 @@
 aid: konfetti
-name: Konfetti
-description: Konfetti is a company surfaced as a portfolio company of speedinvest and added to the API
-  Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+name: konfetti
+description: >-
+  konfetti (Konfetti GmbH, Berlin) operates a marketplace for bookable
+  experiences — cooking classes, pottery and ceramics workshops, cocktail
+  courses, tastings, boat tours, creative and craft workshops, DIY kits and
+  team events — across Germany and Austria, with more than 7,600 bookable
+  experience listings and coverage in Berlin, Munich, Cologne, Hamburg,
+  Frankfurt, Stuttgart, Dusseldorf, Leipzig, Dresden, Hannover, Nuremberg,
+  Muenster, Heidelberg and Vienna. Alongside the consumer storefront, konfetti
+  sells an all-in-one booking-management product to its partner hosts: a
+  back-office at backoffice.gokonfetti.com for managing experiences, dates,
+  tickets, gift cards, invoicing and payouts, plus an embeddable booking
+  solution and a set of embeddable widgets that partners place on their own
+  websites and social channels. konfetti is backed by Speedinvest. It publishes
+  no public developer portal or API reference; the JSON API behind the
+  storefront at api.gokonfetti.com is documented here observationally by API
+  Evangelist.
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://gokonfetti.com/_nuxt3-static/logos/kft-short-logo-white-bg.webp
 url: https://raw.githubusercontent.com/api-evangelist/konfetti/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - speedinvest
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-legal-entity: Konfetti GmbH
+x-registered-address: Wrangelstrasse 100, 10997 Berlin, Germany
+x-register: Amtsgericht Charlottenburg HRB 229242 B
+x-vat-id: DE344165820
+x-managing-directors:
+- Tobias Fezer
+- Wolfgang Mauer
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
 tags:
 - Company
-apis: []
+- Marketplace
+- Experiences
+- Booking
+- Events
+- Workshops
+- Ticketing
+- Gift Cards
+- Travel and Leisure
+- Germany
+- Commerce
+apis:
+- aid: konfetti:konfetti-account-api
+  name: konfetti account API
+  description: Authenticated customer profile and registration.
+  humanURL: https://gokonfetti.com/de-de/partner/
+  baseURL: https://api.gokonfetti.com/v1
+  tags:
+  - account
+  properties:
+  - type: OpenAPI
+    url: openapi/konfetti-account-api-openapi.yml
+  - type: Authentication
+    url: authentication/konfetti-authentication.yml
+  - type: Conventions
+    url: conventions/konfetti-conventions.yml
+  - type: ErrorCatalog
+    url: errors/konfetti-problem-types.yml
+  - type: DataModel
+    url: data-model/konfetti-data-model.yml
+- aid: konfetti:konfetti-auth-api
+  name: konfetti auth API
+  description: OAuth 2.0 token issuance.
+  humanURL: https://gokonfetti.com/de-de/partner/
+  baseURL: https://api.gokonfetti.com/v1
+  tags:
+  - auth
+  properties:
+  - type: OpenAPI
+    url: openapi/konfetti-auth-api-openapi.yml
+  - type: Authentication
+    url: authentication/konfetti-authentication.yml
+  - type: Conventions
+    url: conventions/konfetti-conventions.yml
+  - type: ErrorCatalog
+    url: errors/konfetti-problem-types.yml
+  - type: DataModel
+    url: data-model/konfetti-data-model.yml
+- aid: konfetti:konfetti-catalog-api
+  name: konfetti catalog API
+  description: Public read access to experiences and categories.
+  humanURL: https://gokonfetti.com/de-de/partner/
+  baseURL: https://api.gokonfetti.com/v1
+  tags:
+  - catalog
+  properties:
+  - type: OpenAPI
+    url: openapi/konfetti-catalog-api-openapi.yml
+  - type: Authentication
+    url: authentication/konfetti-authentication.yml
+  - type: Conventions
+    url: conventions/konfetti-conventions.yml
+  - type: ErrorCatalog
+    url: errors/konfetti-problem-types.yml
+  - type: DataModel
+    url: data-model/konfetti-data-model.yml
+- aid: konfetti:konfetti-checkout-api
+  name: konfetti checkout API
+  description: Cart validation, coupons and orders.
+  humanURL: https://gokonfetti.com/de-de/partner/
+  baseURL: https://api.gokonfetti.com/v1
+  tags:
+  - checkout
+  properties:
+  - type: OpenAPI
+    url: openapi/konfetti-checkout-api-openapi.yml
+  - type: Authentication
+    url: authentication/konfetti-authentication.yml
+  - type: Conventions
+    url: conventions/konfetti-conventions.yml
+  - type: ErrorCatalog
+    url: errors/konfetti-problem-types.yml
+  - type: DataModel
+    url: data-model/konfetti-data-model.yml
+- aid: konfetti:konfetti-requests-api
+  name: konfetti requests API
+  description: Lead-capture endpoints for date and private-event requests.
+  humanURL: https://gokonfetti.com/de-de/partner/
+  baseURL: https://api.gokonfetti.com/v1
+  tags:
+  - requests
+  properties:
+  - type: OpenAPI
+    url: openapi/konfetti-requests-api-openapi.yml
+  - type: Authentication
+    url: authentication/konfetti-authentication.yml
+  - type: Conventions
+    url: conventions/konfetti-conventions.yml
+  - type: ErrorCatalog
+    url: errors/konfetti-problem-types.yml
+  - type: DataModel
+    url: data-model/konfetti-data-model.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+common:
+- type: DomainSecurity
+  url: security/konfetti-domain-security.yml
+- type: Website
+  url: https://gokonfetti.com
+- type: HelpCenter
+  url: https://help.gokonfetti.com
+- type: Support
+  url: https://help.gokonfetti.com
+- type: FAQ
+  url: https://gokonfetti.com/de-de/faq/
+- type: Blog
+  url: https://gokonfetti.com/de-de/magazine/
+- type: SignUp
+  url: https://gokonfetti.com/de-de/partner/
+- type: Login
+  url: https://backoffice.gokonfetti.com/#/sign-in
+- type: Portal
+  url: https://backoffice.gokonfetti.com
+- type: Pricing
+  url: https://gokonfetti.com/de-de/partner/
+- type: TermsOfService
+  url: https://gokonfetti.com/de-de/terms-and-conditions/
+- type: PrivacyPolicy
+  url: https://gokonfetti.com/de-de/privacy-policy/
+- type: CookiePolicy
+  url: https://www.iubenda.com/privacy-policy/79545710/cookie-policy
+- type: Accessibility
+  url: https://gokonfetti.com/de-de/b2c/accessibility-declaration/
+- type: LegalNotice
+  url: https://gokonfetti.com/de-de/impressum/
+- type: Press
+  url: https://konfetti.notion.site/Pressebereich-konfetti-8ba576a989014ac9a6976509ab633332
+- type: Partners
+  url: https://konfetti.notion.site/Werde-Kooperationspartner-9ab08775d1e14e329786dfc7ab5ed7b7
+- type: Jobs
+  url: https://join.com/companies/gokonfetti
+- type: LinkedIn
+  url: https://www.linkedin.com/company/72680824/
+- type: Instagram
+  url: https://www.instagram.com/gokonfetti/
+- type: Facebook
+  url: https://www.facebook.com/gokonfetti/
+- type: Pinterest
+  url: https://de.pinterest.com/gokonfetti/
+- type: Email
+  url: mailto:hallo@gokonfetti.com
+- type: Components
+  url: components/konfetti-components.yml
+- type: Packages
+  url: packages/konfetti-packages.yml
+- type: Conformance
+  url: conformance/konfetti-conformance.yml
+- type: Lifecycle
+  url: lifecycle/konfetti-lifecycle.yml
+- type: WellKnown
+  url: well-known/konfetti-well-known.yml
+- type: LLMsTxt
+  url: llms/konfetti-llms.txt
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence
