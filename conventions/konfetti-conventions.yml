@@ -1,0 +1,193 @@
+generated: '2026-07-19'
+method: derived
+source: >-
+  Derived from live observation of https://api.gokonfetti.com/v1 on 2026-07-19
+  (response headers, pagination envelopes, error envelopes, query-parameter
+  behaviour) and from the publicly served gokonfetti.com Nuxt bundles under
+  /_nuxt3/*.js, which show how the first-party client calls the API. konfetti
+  publishes no developer documentation, so nothing here is quoted from a
+  provider reference — it is all observed behaviour.
+description: >-
+  Cross-cutting request/response semantics of the konfetti Store API: auth
+  style, pagination, relation includes, the search/filter grammar, locale
+  negotiation, error envelope shape, request tracing and versioning. These are
+  the runtime conventions OpenAPI does not fully express.
+
+base_url: https://api.gokonfetti.com/v1
+api_style: >-
+  REST over HTTPS (HTTP/2), JSON request and response bodies. Server stack is
+  Apiato on Laravel behind AWS API Gateway (identified by the `Apiato` default
+  page at the API root and the `apigw-requestid` response header). Response
+  serialization follows the League Fractal transformer convention: a `data`
+  envelope, embedded relations nested under their own `data` key, and a `meta`
+  block.
+
+authentication:
+  scheme: >-
+    Bearer token in the `Authorization` header for protected endpoints; the
+    public /v1/store/* catalog requires no credentials at all.
+  token_endpoint: POST /v1/oauth/token
+  token_endpoint_observed: >-
+    An empty POST returned HTTP 400 with the League OAuth2 Server error
+    `unsupported_grant_type`, confirming a standard OAuth 2.0 token endpoint.
+  unauthenticated_behavior: >-
+    Protected endpoints (/v1/checkout/orders, /v1/user/profile) respond 302
+    redirecting to https://api.gokonfetti.com/login rather than returning 401.
+  detail: authentication/konfetti-authentication.yml
+
+idempotency:
+  supported: false
+  evidence: >-
+    No `Idempotency-Key` header, idempotency documentation, or idempotent-replay
+    behaviour was observed on any endpoint, and konfetti publishes no API
+    documentation that describes one. Write endpoints (date requests, private
+    event requests, newsletter subscription, cart validation) appear to be
+    plain non-idempotent POSTs. Retrying a failed write may duplicate it.
+
+pagination:
+  style: page-number
+  request_params:
+    page: 1-based page number.
+    per_page: Page size. Default 10 (observed on /v1/store/events).
+    limit: >-
+      Alternative page-size parameter used by the storefront; `limit=-1`
+      requests an unpaginated result.
+  response_fields:
+    meta.pagination.total: Total matching records (7,605 events on 2026-07-19).
+    meta.pagination.count: Records in this page.
+    meta.pagination.per_page: Page size in effect.
+    meta.pagination.current_page: Current page number.
+    meta.pagination.total_pages: Total page count.
+    meta.pagination.links.next: Absolute URL of the next page.
+    meta.pagination.links.previous: Absolute URL of the previous page (absent on page 1).
+  notes: >-
+    Links are absolute and echo the request's other query parameters, so
+    link-following is safe.
+
+field_expansion:
+  supported: true
+  mechanism: >-
+    `include=` query parameter with a comma-separated list of relation names;
+    dot-paths are supported for nested relations (e.g. `address.locality`).
+  discovery: >-
+    Each list response advertises its accepted relations in `meta.include` —
+    for /v1/store/events that is [categories, supplier, address, reviews]; for
+    /v1/store/categories it is [thumbnail].
+  shape: >-
+    An included relation is returned as an object with its own `data` key
+    (`supplier: {data: {...}}`, `categories: {data: [...]}`), not inlined
+    directly onto the parent.
+
+filtering_and_sorting:
+  grammar: l5-repository / prettus style
+  params:
+    search: >-
+      Semicolon-delimited `field:value` pairs, e.g.
+      `hasEvent:true;type:ONLINE;category:kochkurs`. Observed fields include
+      supplier_id, hasEvent, type and category.
+    searchFields: >-
+      Per-field comparison operator, e.g. `supplier_id:!=` to negate a match.
+    orderBy: >-
+      Comma-separated sort fields. Observed: created_at, distance, has_events,
+      has_promotion, trending_90_days.
+    sortedBy: '`asc` or `desc`, applied to orderBy.'
+  encoding: >-
+    The storefront serializes arrays with `arrayFormat: comma` and
+    `encode: false`, so `include` and `orderBy` are sent as bare
+    comma-separated lists.
+
+localization:
+  mechanism: >-
+    `Accept-Language` request header selects the response locale. Responses
+    carry `content-language` (observed `de_DE`).
+  effects: >-
+    Locale drives translated content, formatted money strings
+    (`default_price.formatted` = "29,00 €"), human-readable relative timestamps
+    (`readable_created_at` = "vor 1 Jahr"), and validation error messages,
+    which are returned already translated ("Das email feld ist erforderlich.").
+  supported_locales_observed: [de-de, en-us]
+
+money:
+  representation: >-
+    Money is an object, not a scalar: `{amount, currency, formatted}` where
+    `amount` is minor units (cents) rendered as a STRING, `currency` is an
+    ISO 4217 code (EUR observed), and `formatted` is a locale-rendered display
+    string. The authenticated profile balance is a plain integer in minor units
+    (the storefront divides `data.balance.amount` by 100).
+
+identifiers:
+  format: >-
+    Six-character lowercase alphanumeric ids (e.g. `xyn62z`, `2wj8mx`,
+    `zpe9ow`) shared across every resource type. There are no type prefixes.
+  type_discriminator: >-
+    Every object carries an `object` field naming its type (EventMetaData,
+    Category, Supplier), which is how a caller tells resources apart.
+  lookup_key: >-
+    Event detail is fetched by PERMALINK (slug-with-id, e.g.
+    `cocktailkurs-in-muenchen-0w1dlw`), not by the bare id — GET
+    /v1/store/events/{bare-id} returned 404.
+
+request_tracing:
+  header: apigw-requestid
+  description: >-
+    Every response carries an `apigw-requestid` header injected by AWS API
+    Gateway (e.g. `AxeI4jYgFiAEMfg=`). There is no first-party konfetti request
+    id, and no documented support channel that accepts one.
+
+rate_limiting:
+  signaled: false
+  evidence: >-
+    No RateLimit-*, X-RateLimit-*, or Retry-After headers were present on any
+    observed response, and konfetti publishes no rate-limit policy. Absence of
+    a signal is not a guarantee of absence of a limit — treat the API as
+    unmetered-but-fragile and throttle conservatively.
+
+caching:
+  headers_observed:
+    cache-control: 'no-cache, private'
+    vary: Origin
+  description: >-
+    Catalog responses are returned with `cache-control: no-cache, private`, so
+    nothing is cacheable by intermediaries. No ETag or Last-Modified was
+    observed, so conditional requests are not available.
+
+versioning:
+  scheme: URI path
+  current: v1
+  description: >-
+    The single version segment `/v1` prefixes every path. There is no version
+    header, no dated version pinning, and no published version history.
+  detail: lifecycle/konfetti-lifecycle.yml
+
+error_envelope:
+  format: >-
+    Bespoke JSON — NOT RFC 9457 problem+json. Responses are served as
+    `application/json`, never `application/problem+json`.
+  generic_shape: '{"message": "...", "errors": []}'
+  validation_shape: >-
+    {"message": "...", "code": 422, "reason": "requestValidation",
+    "errors": {"<field>": ["<translated message>"]}}
+  oauth_shape: >-
+    RFC 6749 style on the token endpoint:
+    {"error": "...", "error_description": "...", "hint": "..."}
+  notes: >-
+    Some failures escape the JSON envelope entirely: unhandled 500s return a
+    Symfony HTML error page, and unauthenticated access to protected endpoints
+    returns a 302 HTML redirect rather than a JSON 401.
+  detail: errors/konfetti-problem-types.yml
+
+cors:
+  vary_origin: true
+  description: >-
+    Responses vary on Origin, indicating per-origin CORS handling. The
+    embeddable widgets and the partner "external" booking flows (the `external`
+    and `source: EMBEDDED` request flags) imply cross-origin browser access is
+    an intended path for partner sites.
+
+stability_warning: >-
+  This API is not a published product. There is no developer portal, no API
+  reference, no terms of use covering API access, no versioning policy beyond
+  the /v1 prefix, no deprecation policy, no status page and no rate-limit
+  contract. Several endpoints named by the first-party client returned HTTP 500
+  when probed with valid-looking inputs. Anyone building against it is building
+  against an internal interface.

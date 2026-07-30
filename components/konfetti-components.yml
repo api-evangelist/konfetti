@@ -1,0 +1,90 @@
+generated: '2026-07-19'
+method: searched
+source: https://gokonfetti.com/en-us/widgets/all-widgets/
+description: >-
+  konfetti's client-side embeddable surfaces — the widgets and booking solution
+  a partner host places on their own website or social channels, distinct from
+  server-side client libraries (konfetti publishes none; see
+  packages/konfetti-packages.yml). Every widget is served as a konfetti-hosted
+  page under `/{locale}/widgets/{widget}/{id}` and is intended to be embedded
+  rather than installed as a library.
+docs:
+  - https://gokonfetti.com/en-us/widgets/all-widgets/
+  - https://gokonfetti.com/de-de/partner/
+
+url_pattern: 'https://gokonfetti.com/{locale}/widgets/{widget}/{id}/'
+locales_observed: [de-de, en-us]
+id_semantics: >-
+  `{id}` is a six-character konfetti id — a partner (supplier) id for the
+  partner-scoped widgets, an event id for the event-scoped review widget. The
+  general banner and badge widgets are also addressed with a partner id.
+loader_libraries: []
+loader_note: >-
+  No JavaScript loader library, npm package or web-component custom element was
+  found. The widgets are konfetti-hosted pages, so embedding is by iframe or
+  link; konfetti does not publish the embed snippet on the public widgets page.
+
+families:
+  booking:
+    description: >-
+      The partner-facing booking solution sold on the partner page — an
+      embeddable booking flow that keeps availability synchronized with the
+      partner's konfetti inventory across their own site and social channels,
+      at a lower commission than marketplace-sourced bookings. Available on all
+      partner plans.
+    components:
+      - name: Online-Buchungslösung (booking solution)
+        description: >-
+          Embeddable booking widget for the partner's own website and social
+          channels; inventory is shared with the konfetti marketplace listing.
+        source: https://gokonfetti.com/de-de/partner/
+        api_signals: >-
+          The storefront sends `external: true` and `source: EMBEDDED` on
+          coupon and cart validation calls when a flow originates from an
+          embedded/partner context, and resolves partner white-label hosts via
+          GET /v1/store/suppliers/{id}/subdomain.
+
+  widgets:
+    description: >-
+      The five embeddable marketing/social-proof widgets published at
+      /widgets/all-widgets/. Each carries konfetti "Buchungslösung von"
+      branding.
+    components:
+      - name: badge
+        path: '/{locale}/widgets/badge/{partnerId}/'
+        description: konfetti branding badge for a partner.
+        verified_status: 200
+      - name: general-banner
+        path: '/{locale}/widgets/general-banner/{partnerId}/'
+        description: General konfetti promotional banner.
+        verified_status: 200
+      - name: partner-banner
+        path: '/{locale}/widgets/partner-banner/{partnerId}/'
+        description: Partner-specific banner content.
+        verified_status: 200
+      - name: reviews-by-partner-id
+        path: '/{locale}/widgets/reviews-by-partner-id/{partnerId}/'
+        description: Embeddable review wall scoped to one partner.
+        verified_status: 200
+      - name: reviews-by-event-id
+        path: '/{locale}/widgets/reviews-by-event-id/{eventId}/'
+        description: Embeddable review wall scoped to one experience.
+        verified_status: 200
+      - name: all-widgets
+        path: '/{locale}/widgets/all-widgets/'
+        description: The index page listing every widget; the closest thing konfetti publishes to widget documentation.
+        verified_status: 200
+
+white_label:
+  supported: partial
+  description: >-
+    Partners can be assigned a konfetti subdomain; the storefront resolves it
+    via GET /v1/store/suppliers/{id}/subdomain and threads a
+    `subdomainSupplierId` through cart and coupon validation. Probing the
+    endpoint for a sampled supplier returned 404, so the capability appears to
+    be enabled per-partner rather than by default.
+
+gaps:
+  - No published embed snippet, iframe sizing guidance, or theming/customization API.
+  - No JavaScript SDK or web-component distribution for the widgets.
+  - No documented events/postMessage contract between an embedded widget and the host page.

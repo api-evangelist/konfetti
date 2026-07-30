@@ -1,0 +1,106 @@
+generated: '2026-07-19'
+method: derived
+source: >-
+  Derived from openapi/konfetti-store-openapi.yml and from searches and probes
+  of konfetti's public surface on 2026-07-19. konfetti publishes no versioning
+  policy, no deprecation policy, no SLA, no changelog and no status page —
+  every "not published" below was checked, not assumed.
+description: >-
+  The lifecycle posture of the konfetti Store API. Because the API is an
+  internal interface rather than a product, there is no lifecycle contract of
+  any kind. This artifact records that absence precisely so a consumer can size
+  the risk.
+
+versioning:
+  scheme: URI path
+  current_version: v1
+  evidence: 'Every observed path is prefixed /v1; no other version segment resolved.'
+  policy_published: false
+  version_header: none
+  date_pinning: none
+  notes: >-
+    A single `/v1` prefix with no published policy means breaking changes could
+    be shipped inside v1 without any signal to callers.
+
+deprecation:
+  policy_published: false
+  sunset_header: not observed
+  deprecation_header: not observed
+  rfc8594_support: false
+  deprecated_operations: []
+  notes: >-
+    No RFC 8594 Sunset header, no Deprecation header, and no deprecation notice
+    on any public page. No operation in
+    openapi/konfetti-store-openapi.yml is marked deprecated because konfetti
+    marks none.
+
+changelog:
+  published: false
+  checked:
+    - https://gokonfetti.com/de-de/magazine/ (consumer content marketing, not a product changelog)
+    - https://help.gokonfetti.com (consumer help centre, no release notes)
+    - https://gokonfetti.com/de-de/partner/ (product marketing, no release notes)
+  notes: >-
+    No dated changelog or release-notes surface exists for either the API or
+    the partner back-office, so no changelog/ artifact is produced.
+
+status_page:
+  published: false
+  probed:
+    - host: status.gokonfetti.com
+      result: >-
+        302 into the marketing site's locale prefix — a wildcard DNS/CDN catch-all,
+        not a real status page. The same catch-all answers for
+        developer/docs/blog/widget/booking subdomains, so a 302 here is not
+        evidence of a service.
+  third_party_checked:
+    - statuspage.io
+    - instatus
+    - betterstack
+  result: no konfetti status page found
+  notes: >-
+    No `StatusPage` pointer is emitted in apis.yml because there is no status
+    page to point at.
+
+sla:
+  published: false
+  notes: >-
+    No uptime commitment, support-response target or availability SLA is
+    published for the API or for the partner back-office. The partner page
+    tiers mention AI support, email support and (Enterprise) a personal account
+    manager, but attach no response-time commitment.
+
+support:
+  channels:
+    - {type: help-centre, url: 'https://help.gokonfetti.com', audience: consumers}
+    - {type: email, url: 'mailto:hallo@gokonfetti.com', audience: general}
+    - {type: back-office, url: 'https://backoffice.gokonfetti.com', audience: partner hosts}
+  developer_channel: none
+  notes: There is no developer support channel, forum, or issue tracker.
+
+observed_stability_signals:
+  - >-
+    GET /v1/store/events/{permalink}/add-ons and
+    GET /v1/store/events/{permalink}/calendar both returned HTTP 500 for a
+    valid, live experience — endpoints the first-party client calls in normal
+    operation.
+  - >-
+    GET /v1/store/customers/subscribe-newsletter returned HTTP 500 rather than
+    405 for a POST-only path.
+  - >-
+    Unauthenticated access to protected endpoints returns a 302 HTML redirect
+    rather than a 401, which will silently corrupt naive clients that follow
+    redirects.
+
+risk_summary: >-
+  Consuming this API means depending on an undocumented internal interface with
+  no version policy, no deprecation notice, no status page, no SLA, no rate-limit
+  contract and no support channel. It is suitable for observation and research;
+  it is not a foundation for a production integration. Partners who need a
+  supported path should use the back-office and the embeddable booking solution
+  in components/konfetti-components.yml.
+
+related:
+  openapi: openapi/konfetti-store-openapi.yml
+  conventions: conventions/konfetti-conventions.yml
+  conformance: conformance/konfetti-conformance.yml

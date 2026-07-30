@@ -1,0 +1,60 @@
+generated: '2026-07-19'
+method: searched
+source: >-
+  Registry and repository searches performed on 2026-07-19. No first-party
+  konfetti client library was found on any registry, and konfetti operates no
+  public GitHub organization. An empty result is a real result, recorded so
+  later runs know the ground has been covered.
+description: >-
+  First-party client libraries and SDKs for konfetti. There are none. konfetti
+  does not market an API, publishes no developer portal, and ships no client
+  libraries in any language. Partner integration is delivered through the
+  hosted back-office and the embeddable widgets catalogued in
+  components/konfetti-components.yml, not through code.
+
+official_packages: []
+community_packages: []
+
+registries_checked:
+  - registry: npm
+    queries: [konfetti, gokonfetti, '@gokonfetti/sdk']
+    result: no first-party package (all 404 on registry.npmjs.org)
+  - registry: PyPI
+    result: no first-party package
+  - registry: Maven Central
+    result: no first-party package
+  - registry: NuGet
+    result: no first-party package
+  - registry: pkg.go.dev
+    result: no first-party package
+  - registry: RubyGems
+    result: no first-party package
+  - registry: Packagist
+    result: >-
+      no first-party package (notable, since the API is a PHP/Laravel Apiato
+      application — konfetti consumes Packagist but publishes nothing to it)
+  - registry: crates.io
+    result: no first-party package
+
+source_control_checked:
+  - org: github.com/gokonfetti
+    result: 404 — does not exist
+  - org: github.com/konfetti
+    result: 404 — does not exist
+  - org: github.com/konfetti-de
+    result: 404 — does not exist
+  - org: github.com/konfettiapp
+    result: >-
+      exists but is UNRELATED — the "KonfettiApp" organization is a different
+      project and is not Konfetti GmbH. Deliberately not linked from apis.yml.
+
+docs_checked:
+  - url: https://gokonfetti.com/de-de/partner/
+    result: markets a booking solution and back-office; no SDK, no code, no API mention
+  - url: https://help.gokonfetti.com
+    result: consumer help centre only — bookings, vouchers, cancellations; no developer content
+
+gaps:
+  - No SDK in any language.
+  - No public source control presence.
+  - No package published to Packagist despite running a PHP/Laravel stack.

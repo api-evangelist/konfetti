@@ -1,0 +1,816 @@
+openapi: 3.1.0
+info:
+  title: konfetti Store API
+  version: v1
+  x-generated: '2026-07-19'
+  x-method: derived
+  x-source: >-
+    Derived by API Evangelist from direct observation of the live konfetti API
+    at https://api.gokonfetti.com/v1 (every path and status code below was
+    probed on 2026-07-19) plus the publicly served gokonfetti.com Nuxt
+    application bundles under /_nuxt3/*.js, which name the endpoints, request
+    bodies and query conventions the storefront uses. konfetti publishes no
+    developer portal, no OpenAPI document and no API reference; this
+    description is an honest reconstruction of the observable surface, not a
+    provider-published specification. Nothing here is invented — schemas are
+    modelled only from responses actually returned.
+  description: >-
+    konfetti (Konfetti GmbH, Berlin) operates a marketplace for bookable
+    experiences, courses and workshops in Germany and Austria. The storefront
+    at gokonfetti.com is a Nuxt 3 application backed by a JSON API served from
+    api.gokonfetti.com — an Apiato/Laravel service exposing a `/v1/store/*`
+    catalog namespace (public, unauthenticated read), a `/v1/checkout/*` and
+    `/v1/user/*` namespace (Bearer-token authenticated), and an OAuth 2.0
+    token endpoint at `/v1/oauth/token`.
+
+    This is an INTERNAL / UNDOCUMENTED API. konfetti does not market it as a
+    public product, publishes no terms of use for it, and may change it without
+    notice. Treat it as observational documentation, not a contract.
+  contact:
+    name: konfetti (Konfetti GmbH)
+    email: hallo@gokonfetti.com
+    url: https://gokonfetti.com
+  license:
+    name: Proprietary — no public API terms published
+servers:
+  - url: https://api.gokonfetti.com
+    description: Production API host (observed HTTP 200, HTTP/2, Apiato/Laravel)
+tags:
+  - name: catalog
+    description: Public read access to experiences and categories.
+  - name: requests
+    description: Lead-capture endpoints for date and private-event requests.
+  - name: checkout
+    description: Cart validation, coupons and orders.
+  - name: account
+    description: Authenticated customer profile and registration.
+  - name: auth
+    description: OAuth 2.0 token issuance.
+paths:
+  /v1/store/events:
+    get:
+      operationId: listEvents
+      summary: List bookable experiences
+      description: >-
+        Paginated list of experience/event descriptions. Observed 200 with
+        `meta.pagination.total` of 7,605 records on 2026-07-19.
+      tags: [catalog]
+      parameters:
+        - $ref: '#/components/parameters/include'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/perPage'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/searchFields'
+        - $ref: '#/components/parameters/orderBy'
+        - $ref: '#/components/parameters/sortedBy'
+      responses:
+        '200':
+          description: A page of events.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: {$ref: '#/components/schemas/Event'}
+                  meta: {$ref: '#/components/schemas/ListMeta'}
+  /v1/store/events/{permalink}:
+    get:
+      operationId: getEvent
+      summary: Retrieve one experience by permalink
+      description: >-
+        Observed 200 for a permalink such as
+        `pasta-play-die-interaktive-kochbox-mit-erlebnisfaktor-xyn62z`; the
+        bare six-character id returned 404, so the slug-with-id permalink is
+        the lookup key.
+      tags: [catalog]
+      parameters:
+        - $ref: '#/components/parameters/permalink'
+        - $ref: '#/components/parameters/include'
+      responses:
+        '200':
+          description: The event, including a full HTML `description` field.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: {$ref: '#/components/schemas/Event'}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /v1/store/events/{permalink}/similar:
+    get:
+      operationId: listSimilarEvents
+      summary: List experiences similar to a given one
+      description: >-
+        Observed 200. The storefront calls this with
+        `orderBy=distance&sortedBy=asc&search=supplier_id:<id>;hasEvent:true&searchFields=supplier_id:!=`.
+      tags: [catalog]
+      parameters:
+        - $ref: '#/components/parameters/permalink'
+        - $ref: '#/components/parameters/include'
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/searchFields'
+        - $ref: '#/components/parameters/orderBy'
+        - $ref: '#/components/parameters/sortedBy'
+      responses:
+        '200':
+          description: A page of similar events.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: {$ref: '#/components/schemas/Event'}
+                  meta: {$ref: '#/components/schemas/ListMeta'}
+  /v1/store/events/{id}/pricings:
+    post:
+      operationId: calculateEventPricing
+      summary: Calculate pricing for a ticket selection
+      description: >-
+        POST-only (GET returned 405 Method Not Allowed). Request body shape is
+        taken verbatim from the storefront bundle. The storefront also sends an
+        `Accept-Language` header to select locale/currency formatting.
+      tags: [catalog]
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: string
+                  description: The specific date/instance id being priced.
+                private:
+                  type: boolean
+                  description: Whether the booking is a private (exclusive) date.
+                ticket_categories:
+                  type: array
+                  description: Quantity per ticket category.
+                  items:
+                    type: object
+                    properties:
+                      category: {type: string, examples: [ADULT]}
+                      amount: {type: integer}
+                type:
+                  type: string
+                  description: Set to GIFT_CARD when pricing a gift-card purchase.
+                  enum: [GIFT_CARD]
+      responses:
+        '200': {description: Calculated pricing for the selection.}
+        '405': {$ref: '#/components/responses/MethodNotAllowed'}
+  /v1/store/events/{id}/subscribe:
+    post:
+      operationId: subscribeToEvent
+      summary: Subscribe an email address to an experience
+      description: >-
+        POST-only (GET returned 405). Used for back-in-stock / new-date
+        notification capture. Response carries a `data.sha256_email_address`
+        hash the storefront forwards to its analytics layer.
+      tags: [requests]
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: {type: string, format: email}
+                external:
+                  type: boolean
+                  description: True when the request originates from an embedded widget.
+      responses:
+        '200': {description: Subscription recorded.}
+        '405': {$ref: '#/components/responses/MethodNotAllowed'}
+  /v1/store/events/{id}/add-ons:
+    get:
+      operationId: listEventAddOns
+      summary: List purchasable add-ons for an experience
+      description: >-
+        Named by the storefront bundle as a GET. Probing it for an experience
+        with no add-ons returned HTTP 500, so the endpoint exists but its
+        empty-set behaviour is unstable; response schema not modelled.
+      tags: [catalog]
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': {description: Add-ons for the experience.}
+        '500': {$ref: '#/components/responses/ServerError'}
+  /v1/store/events/{id}/calendar:
+    get:
+      operationId: getEventCalendar
+      summary: Retrieve the availability calendar for an experience
+      description: >-
+        Named by the storefront bundle as a GET. Observed HTTP 500 for the
+        probed experience; response schema not modelled.
+      tags: [catalog]
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': {description: Availability calendar.}
+        '500': {$ref: '#/components/responses/ServerError'}
+  /v1/store/categories:
+    get:
+      operationId: listStoreCategories
+      summary: List experience categories
+      description: 'Observed 200. Supports `include=thumbnail` per the response `meta.include`.'
+      tags: [catalog]
+      parameters:
+        - $ref: '#/components/parameters/include'
+      responses:
+        '200':
+          description: All categories.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: {$ref: '#/components/schemas/Category'}
+                  meta:
+                    type: object
+                    properties:
+                      include: {type: array, items: {type: string}}
+                      custom: {type: array, items: {}}
+  /v1/categories:
+    get:
+      operationId: listCategories
+      summary: List categories with SEO landing-page content
+      description: >-
+        Observed 200. A richer variant of `/v1/store/categories` that adds
+        `seo_title`, `seo_meta_description`, `title`, `description` (HTML) and
+        `parent_id` — the content behind the public category landing pages.
+      tags: [catalog]
+      responses:
+        '200':
+          description: Categories with landing-page copy.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: {$ref: '#/components/schemas/CategoryPage'}
+  /v1/store/suppliers/{id}/subdomain:
+    get:
+      operationId: getSupplierSubdomain
+      summary: Resolve a supplier's white-label subdomain
+      description: >-
+        Named by the storefront bundle. Probing a known supplier id returned
+        404, so it likely only resolves for suppliers who have a white-label
+        subdomain configured.
+      tags: [catalog]
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': {description: Subdomain configuration for the supplier.}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /v1/store/date-requests:
+    post:
+      operationId: createDateRequest
+      summary: Request alternative dates for an experience
+      description: >-
+        Lead capture for "no date suits me" enquiries. Body shape taken
+        verbatim from the storefront bundle. GET redirected (302) to the API
+        host login page.
+      tags: [requests]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_description_id: {type: string}
+                email: {type: string, format: email}
+                first_name: {type: string}
+                last_name: {type: string}
+                phone: {type: string}
+                number_of_tickets: {type: integer}
+                date_type: {type: string, enum: [PUBLIC, PRIVATE]}
+                last_page_seen: {type: string, format: uri}
+                dates:
+                  type: array
+                  description: 'Requested dates, formatted `YYYY-MM-DD HH:MM`.'
+                  items: {type: string}
+      responses:
+        '201': {description: Date request created.}
+  /v1/store/date-requests/{id}/similar-events:
+    get:
+      operationId: listDateRequestSimilarEvents
+      summary: List experiences similar to a submitted date request
+      tags: [requests]
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/include'
+      responses:
+        '200': {description: Similar events for the date request.}
+  /v1/store/private-event-requests:
+    post:
+      operationId: createPrivateEventRequest
+      summary: Request a private / corporate team event
+      description: >-
+        POST-only (GET returned 405). Body shape taken verbatim from the
+        storefront bundle.
+      tags: [requests]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                company_name: {type: string}
+                city: {type: string}
+                event_description_id: {type: string}
+                email: {type: string, format: email}
+                first_name: {type: string}
+                last_name: {type: string}
+                phone: {type: string}
+                number_of_tickets: {type: integer}
+                date: {type: string, description: 'Preferred date, `YYYY-MM-DD HH:MM:SS`.'}
+                preferred_location: {type: string}
+                last_page_seen: {type: string, format: uri}
+      responses:
+        '201': {description: Private event request created.}
+        '405': {$ref: '#/components/responses/MethodNotAllowed'}
+  /v1/store/customers/subscribe-newsletter:
+    post:
+      operationId: subscribeNewsletter
+      summary: Subscribe an email address to the konfetti newsletter
+      tags: [requests]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: {type: string, format: email}
+      responses:
+        '200': {description: Newsletter subscription recorded.}
+  /v1/store/coupon/{code}/validate:
+    post:
+      operationId: validateCoupon
+      summary: Validate a coupon or voucher code against a cart
+      description: >-
+        POST-only (GET returned 405). Returns `data.coupon` and
+        `data.discount`. The storefront treats HTTP 403 as "coupon no longer
+        applies" and clears local coupon state.
+      tags: [checkout]
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema: {type: string}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                supplier_id: {type: string}
+                external: {type: boolean}
+                items: {type: array, items: {type: object}}
+                source: {type: string, enum: [KONFETTI, EMBEDDED]}
+                address: {type: object}
+      responses:
+        '200': {description: Coupon is valid; discount returned.}
+        '403': {description: Coupon is not valid for this cart.}
+        '405': {$ref: '#/components/responses/MethodNotAllowed'}
+  /v1/checkout/cart/validate:
+    post:
+      operationId: validateCart
+      summary: Validate the current cart
+      description: >-
+        POST-only (GET returned 405). The storefront polls this every ten
+        minutes while a cart is open to re-check availability and pricing.
+      tags: [checkout]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                external: {type: boolean}
+                items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type: {type: string, enum: [EVENT, GIFT_CARD]}
+                      quantity: {type: integer}
+      responses:
+        '200': {description: Cart is valid.}
+        '405': {$ref: '#/components/responses/MethodNotAllowed'}
+  /v1/checkout/orders:
+    get:
+      operationId: listOrders
+      summary: List the authenticated customer's orders
+      description: >-
+        Requires a Bearer access token; unauthenticated GET redirected (302) to
+        the login page. The storefront calls it with
+        `?orderBy=created_at&sortedBy=desc&page=N`.
+      tags: [checkout]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/orderBy'
+        - $ref: '#/components/parameters/sortedBy'
+      responses:
+        '200': {description: A page of orders.}
+        '302': {description: Redirect to login when unauthenticated.}
+  /v1/user/profile:
+    get:
+      operationId: getUserProfile
+      summary: Retrieve the authenticated customer's profile
+      description: >-
+        Requires a Bearer access token; unauthenticated GET redirected (302) to
+        the login page. The storefront calls it with
+        `?include=customer,referralCoupon&with_session=1` and reads
+        `data.balance.amount` (minor units).
+      tags: [account]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/include'
+        - name: with_session
+          in: query
+          schema: {type: integer, enum: [1]}
+      responses:
+        '200': {description: The customer profile.}
+        '302': {description: Redirect to login when unauthenticated.}
+  /v1/register:
+    post:
+      operationId: registerCustomer
+      summary: Register a new customer account
+      description: >-
+        POST-only (GET returned 405). Probing with an empty body returned a
+        422 listing the required fields, which is where the schema below comes
+        from. Validation messages are returned in the request locale (German by
+        default).
+      tags: [account]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, first_name]
+              properties:
+                email: {type: string, format: email}
+                password: {type: string, format: password}
+                first_name: {type: string}
+      responses:
+        '201': {description: Account created.}
+        '422': {$ref: '#/components/responses/ValidationError'}
+  /v1/oauth/token:
+    post:
+      operationId: issueAccessToken
+      summary: Issue an OAuth 2.0 access token
+      description: >-
+        POST-only (GET returned 405). Probing with an empty body returned the
+        League OAuth2 Server error `unsupported_grant_type` with HTTP 400,
+        confirming a standard OAuth 2.0 token endpoint. konfetti publishes no
+        client registration process, so the supported grant types are not
+        documented here.
+      tags: [auth]
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type: {type: string}
+                client_id: {type: string}
+                client_secret: {type: string}
+                username: {type: string}
+                password: {type: string}
+                scope: {type: string}
+      responses:
+        '200':
+          description: Access token issued.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token_type: {type: string}
+                  expires_in: {type: integer}
+                  access_token: {type: string}
+                  refresh_token: {type: string}
+        '400':
+          description: OAuth 2.0 error.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/OAuthError'}
+  /v1/store/metrics/{resource}/{id}:
+    get:
+      operationId: recordMetric
+      summary: Record a storefront metric for a resource
+      description: >-
+        Named by the storefront bundle. Probing returned 422, so the path
+        segments are validated against an enumeration that is not published.
+      tags: [catalog]
+      parameters:
+        - name: resource
+          in: path
+          required: true
+          schema: {type: string}
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': {description: Metric recorded.}
+        '422': {$ref: '#/components/responses/ValidationError'}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: >-
+        Access token obtained from POST /v1/oauth/token and sent as
+        `Authorization: Bearer <token>`.
+    oauth2:
+      type: oauth2
+      description: >-
+        OAuth 2.0 token endpoint confirmed at /v1/oauth/token (League OAuth2
+        Server). No authorization endpoint, discovery document or scope
+        reference is published, so no flows are enumerated here.
+      flows: {}
+  parameters:
+    include:
+      name: include
+      in: query
+      description: >-
+        Comma-separated relations to embed. Observed values for events:
+        `categories`, `supplier`, `address`, `reviews`, and the dot-path
+        `address.locality`. For categories: `thumbnail`. For the user profile:
+        `customer`, `referralCoupon`.
+      schema: {type: string}
+      example: supplier,categories
+    page:
+      name: page
+      in: query
+      description: 1-based page number.
+      schema: {type: integer, minimum: 1, default: 1}
+    perPage:
+      name: per_page
+      in: query
+      description: Page size. Default 10 (observed).
+      schema: {type: integer, default: 10}
+    limit:
+      name: limit
+      in: query
+      description: >-
+        Alternative page-size parameter used by the storefront; `limit=-1`
+        requests an unpaginated result.
+      schema: {type: integer}
+    search:
+      name: search
+      in: query
+      description: >-
+        Semicolon-delimited `field:value` filter expression (l5-repository
+        style). Observed fields: `supplier_id`, `hasEvent`, `type`, `category`.
+      schema: {type: string}
+      example: 'hasEvent:true;type:ONLINE;category:kochkurs'
+    searchFields:
+      name: searchFields
+      in: query
+      description: >-
+        Comparison operator per search field, e.g. `supplier_id:!=` to negate.
+      schema: {type: string}
+    orderBy:
+      name: orderBy
+      in: query
+      description: >-
+        Comma-separated sort fields. Observed: `created_at`, `distance`,
+        `has_events`, `has_promotion`, `trending_90_days`.
+      schema: {type: string}
+    sortedBy:
+      name: sortedBy
+      in: query
+      description: Sort direction applied to orderBy.
+      schema: {type: string, enum: [asc, desc]}
+    id:
+      name: id
+      in: path
+      required: true
+      description: Six-character konfetti resource id (e.g. `xyn62z`).
+      schema: {type: string}
+    permalink:
+      name: permalink
+      in: path
+      required: true
+      description: 'Slug-with-id permalink (e.g. `cocktailkurs-in-muenchen-0w1dlw`).'
+      schema: {type: string}
+  responses:
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/Error'}
+    MethodNotAllowed:
+      description: HTTP method not allowed for this path.
+    ValidationError:
+      description: Request validation failed.
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/ValidationError'}
+    ServerError:
+      description: Server error.
+  schemas:
+    ListMeta:
+      type: object
+      properties:
+        include:
+          type: array
+          description: Relations this endpoint accepts in `include`.
+          items: {type: string}
+        custom: {type: array, items: {}}
+        pagination:
+          type: object
+          properties:
+            total: {type: integer}
+            count: {type: integer}
+            per_page: {type: integer}
+            current_page: {type: integer}
+            total_pages: {type: integer}
+            links:
+              type: object
+              properties:
+                previous: {type: string, format: uri}
+                next: {type: string, format: uri}
+    Money:
+      type: object
+      description: Monetary amount in minor units plus a locale-formatted string.
+      properties:
+        amount: {type: string, description: 'Minor units (cents), as a string.'}
+        currency: {type: string, examples: [EUR]}
+        formatted: {type: string, examples: ['29,00 €']}
+    Photo:
+      type: object
+      properties:
+        id: {type: integer}
+        filename: {type: string}
+        thumb: {type: string, format: uri}
+        cropped: {type: string, format: uri}
+        dimensions:
+          type: object
+          properties:
+            width: {type: number}
+            height: {type: number}
+        alt: {type: string}
+    Instance:
+      type: object
+      description: A single scheduled occurrence (date) of an experience.
+      properties:
+        id: {type: string}
+        start: {type: string, format: date-time}
+        end: {type: string, format: date-time}
+        status: {type: string, examples: [OPEN]}
+        duration: {type: integer}
+        date_type: {type: string, enum: [PUBLIC, PRIVATE]}
+        available_tickets_quantity: {type: integer}
+        private_min_tickets: {type: integer}
+        private_max_tickets: {type: integer}
+        min_advance_date: {type: string, format: date-time}
+        all_day: {type: boolean}
+    Event:
+      type: object
+      description: >-
+        An experience description (`object: EventMetaData`) — the sellable
+        product, distinct from its scheduled instances.
+      properties:
+        object: {type: string, const: EventMetaData}
+        id: {type: string}
+        title: {type: string}
+        subtitle: {type: string}
+        description: {type: string, description: 'HTML body, returned on the detail endpoint.'}
+        type: {type: string, examples: [NATIONWIDE, ONLINE]}
+        permalink: {type: string}
+        default_duration: {type: integer, description: Minutes.}
+        duration_summary: {type: [string, 'null']}
+        multiple_locations: {type: boolean}
+        default_price: {$ref: '#/components/schemas/Money'}
+        retail_price: {$ref: '#/components/schemas/Money'}
+        original_price: {oneOf: [{$ref: '#/components/schemas/Money'}, {type: 'null'}]}
+        min_price: {$ref: '#/components/schemas/Money'}
+        max_price: {$ref: '#/components/schemas/Money'}
+        created_at: {type: string, format: date-time}
+        updated_at: {type: string, format: date-time}
+        readable_created_at: {type: string, description: Locale-formatted relative time.}
+        readable_updated_at: {type: string}
+        timezone: {type: string, examples: [Europe/Berlin]}
+        languages: {type: array, items: {type: string}}
+        is_team_event: {type: boolean}
+        is_group_pricing: {type: boolean}
+        next_instance: {$ref: '#/components/schemas/Instance'}
+        min_date: {type: string, format: date-time}
+        max_date: {type: string, format: date-time}
+        min_duration: {type: integer}
+        max_duration: {type: integer}
+        avg_review: {type: number}
+        total_reviews: {type: integer}
+        review_breakdown:
+          type: object
+          properties:
+            1_star: {type: integer}
+            2_star: {type: integer}
+            3_star: {type: integer}
+            4_star: {type: integer}
+            5_star: {type: integer}
+        has_mobile_classes: {type: boolean}
+        has_shipping_costs: {type: integer}
+        specialization: {type: string, examples: [KIT]}
+        has_promotions: {type: boolean}
+        photos: {type: array, items: {$ref: '#/components/schemas/Photo'}}
+        media: {type: array, items: {$ref: '#/components/schemas/Photo'}}
+        categories:
+          type: object
+          description: Present when `include=categories`.
+          properties:
+            data: {type: array, items: {$ref: '#/components/schemas/Category'}}
+        supplier:
+          type: object
+          description: Present when `include=supplier`.
+          properties:
+            data: {$ref: '#/components/schemas/Supplier'}
+        address:
+          type: object
+          description: Present when `include=address` or `include=address.locality`.
+        reviews:
+          type: object
+          description: Present when `include=reviews`.
+          properties:
+            data:
+              type: object
+              properties:
+                rating: {type: number}
+                totalRating: {type: integer}
+    Supplier:
+      type: object
+      description: The partner/host that runs an experience.
+      properties:
+        object: {type: string, const: Supplier}
+        id: {type: string}
+        name: {type: string}
+        page_title: {type: string}
+        permalink: {type: string}
+        description: {type: string, description: HTML body.}
+    Category:
+      type: object
+      properties:
+        object: {type: string, const: Category}
+        id: {type: string}
+        name: {type: string}
+        slug: {type: string}
+        featured: {type: boolean}
+        avg_review: {type: [number, string]}
+        total_reviews: {type: integer}
+    CategoryPage:
+      allOf:
+        - $ref: '#/components/schemas/Category'
+        - type: object
+          properties:
+            parent_id: {type: string}
+            seo_title: {type: string}
+            seo_meta_description: {type: string}
+            title: {type: string}
+            description: {type: string, description: HTML landing-page copy.}
+    Error:
+      type: object
+      description: >-
+        The generic Apiato error envelope. Observed verbatim on a 404:
+        `{"message":"The requested Resource was not found.","errors":[]}`.
+      properties:
+        message: {type: string}
+        errors: {type: [array, object]}
+    ValidationError:
+      type: object
+      description: >-
+        The 422 validation envelope, observed verbatim from POST /v1/register.
+      properties:
+        message: {type: string}
+        code: {type: integer, const: 422}
+        reason: {type: string, const: requestValidation}
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items: {type: string}
+    OAuthError:
+      type: object
+      description: >-
+        RFC 6749 error envelope from the League OAuth2 Server, observed
+        verbatim on POST /v1/oauth/token with an empty body.
+      properties:
+        error: {type: string, examples: [unsupported_grant_type]}
+        error_description: {type: string}
+        hint: {type: string}

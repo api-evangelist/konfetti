@@ -1,0 +1,118 @@
+generated: '2026-07-19'
+method: derived
+source: >-
+  Derived from openapi/konfetti-store-openapi.yml. konfetti operates no MCP
+  server — searches of the official MCP registry, konfetti's own hosts
+  (no /mcp or /sse endpoint, no ai-plugin.json) and its public surface found
+  nothing. The tools below are a CANDIDATE design showing what an MCP server
+  over the observable konfetti API could expose; nothing here is shipped by
+  konfetti.
+status: candidate
+official_server: none
+description: >-
+  A candidate Model Context Protocol tool surface over the konfetti Store API.
+  Only the public, unauthenticated catalog operations are proposed as tools —
+  the authenticated checkout and profile operations are excluded because
+  konfetti publishes no route for a third party to obtain a token, and the
+  write endpoints are excluded because they create real leads in konfetti's
+  CRM and are not idempotent.
+
+searched:
+  - target: official MCP registry
+    result: no konfetti entry
+  - target: https://api.gokonfetti.com/.well-known/ai-plugin.json
+    result: 404
+  - target: https://gokonfetti.com/.well-known/ai-plugin.json
+    result: 404 (after locale redirect)
+  - target: konfetti public surface (partner page, help centre, magazine)
+    result: no MCP, agent or AI-integration mention
+
+transport_if_built: streamable-http
+server_base: https://api.gokonfetti.com/v1
+
+tools:
+  - name: search_experiences
+    operationId: listEvents
+    method: GET
+    path: /v1/store/events
+    description: >-
+      Search konfetti's catalog of bookable experiences in Germany and Austria.
+      Supports the l5-repository filter grammar via `search`
+      (semicolon-delimited field:value), plus orderBy/sortedBy and relation
+      includes.
+    inputs:
+      search: 'Filter expression, e.g. hasEvent:true;type:ONLINE;category:kochkurs'
+      include: 'Relations to embed: categories, supplier, address, reviews'
+      orderBy: 'created_at | distance | has_events | has_promotion | trending_90_days'
+      sortedBy: asc | desc
+      page: 1-based page number
+      per_page: page size (default 10)
+    returns: Paginated experiences with pricing, ratings, next available date and photos.
+    auth_required: false
+  - name: get_experience
+    operationId: getEvent
+    method: GET
+    path: /v1/store/events/{permalink}
+    description: >-
+      Retrieve one experience in full, including its HTML description. Note the
+      lookup key is the PERMALINK (slug-with-id), not the bare id.
+    inputs:
+      permalink: 'e.g. cocktailkurs-in-muenchen-0w1dlw'
+      include: 'Relations to embed: supplier, address.locality, reviews, categories'
+    returns: The full experience record.
+    auth_required: false
+  - name: find_similar_experiences
+    operationId: listSimilarEvents
+    method: GET
+    path: /v1/store/events/{permalink}/similar
+    description: Find experiences similar to a given one, optionally sorted by distance.
+    inputs:
+      permalink: The reference experience permalink.
+      include: Relations to embed.
+      orderBy: 'distance is the useful value here'
+    returns: A page of similar experiences.
+    auth_required: false
+  - name: list_categories
+    operationId: listStoreCategories
+    method: GET
+    path: /v1/store/categories
+    description: >-
+      List konfetti's experience categories with aggregate ratings — the
+      vocabulary you need to build a `search=category:<slug>` filter.
+    inputs:
+      include: thumbnail
+    returns: All categories with slug, featured flag and review aggregates.
+    auth_required: false
+  - name: get_category_content
+    operationId: listCategories
+    method: GET
+    path: /v1/categories
+    description: >-
+      List categories with their SEO landing-page content — titles, meta
+      descriptions and HTML body copy, plus parent_id for the hierarchy.
+    returns: Categories with landing-page copy.
+    auth_required: false
+
+excluded_operations:
+  - operations: [calculateEventPricing, validateCart, validateCoupon, listOrders, getUserProfile, registerCustomer, issueAccessToken]
+    reason: >-
+      Require a Bearer token or session, and konfetti publishes no way for a
+      third party to obtain one.
+  - operations: [createDateRequest, createPrivateEventRequest, subscribeNewsletter, subscribeToEvent]
+    reason: >-
+      Write endpoints that create real sales leads and newsletter subscriptions
+      in konfetti's systems. They are not idempotent (see
+      conventions/konfetti-conventions.yml), so an agent retry would duplicate
+      them. Not appropriate for an unattended tool surface.
+  - operations: [listEventAddOns, getEventCalendar, getSupplierSubdomain, recordMetric]
+    reason: Returned 500/404/422 when probed; not stable enough to expose.
+
+caveats: >-
+  Any MCP server built on this would sit on top of an undocumented internal API
+  with no rate-limit contract, no versioning policy and no terms of use
+  covering programmatic access. See lifecycle/konfetti-lifecycle.yml. Anyone
+  building it should first ask konfetti for permission.
+
+related:
+  openapi: openapi/konfetti-store-openapi.yml
+  skills: skills/_index.yml

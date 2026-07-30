@@ -1,0 +1,22 @@
+{
+  "provider": "konfetti",
+  "sources": [
+    "konfetti-account-api-openapi.yml",
+    "konfetti-auth-api-openapi.yml",
+    "konfetti-catalog-api-openapi.yml",
+    "konfetti-checkout-api-openapi.yml",
+    "konfetti-requests-api-openapi.yml"
+  ],
+  "outputs": [
+    "konfetti-account-api-openapi.yml",
+    "konfetti-auth-api-openapi.yml",
+    "konfetti-catalog-api-openapi.yml",
+    "konfetti-checkout-api-openapi.yml",
+    "konfetti-requests-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

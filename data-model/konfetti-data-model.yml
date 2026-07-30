@@ -1,0 +1,172 @@
+generated: '2026-07-19'
+method: derived
+source: >-
+  Derived from openapi/konfetti-store-openapi.yml and from the actual JSON
+  returned by https://api.gokonfetti.com/v1/store/events (with
+  include=supplier,categories,address.locality,reviews) and
+  /v1/store/categories on 2026-07-19. konfetti publishes no object reference,
+  so relationships are read from embedded `include` relations and id-reference
+  fields in live responses.
+description: >-
+  The entity-relationship graph behind the konfetti experience marketplace:
+  suppliers (partner hosts) publish experience descriptions, which have
+  scheduled instances (dates), belong to categories, sit at an address, and
+  accumulate reviews; customers place orders against them and redeem coupons
+  and gift cards.
+
+notation: >-
+  relationships use has_one / has_many / belongs_to with the field or include
+  name that carries the link; direction is from the entity that owns the
+  reference.
+
+id_convention:
+  format: six-character lowercase alphanumeric
+  examples: [xyn62z, 2wj8mx, zpe9ow, 9wogx3, 0w1dlw]
+  prefixes: none — konfetti ids carry no type prefix
+  discriminator: >-
+    Each object carries an `object` field naming its type, which substitutes
+    for a prefix (EventMetaData, Category, Supplier).
+
+entities:
+  - name: EventMetaData
+    domain: catalog
+    description: >-
+      An experience description — the sellable product (a cooking class, a
+      pottery workshop, a DIY kit). Addressed publicly by `permalink`.
+      `type` observed as NATIONWIDE and ONLINE; `specialization` observed as
+      KIT.
+    observed_on: GET /v1/store/events
+  - name: Instance
+    domain: catalog
+    description: >-
+      A single scheduled occurrence of an experience, with start/end, status
+      (OPEN observed), ticket availability, and a date_type of PUBLIC or
+      PRIVATE. Surfaced on the parent as `next_instance`; the full set is
+      behind GET /v1/store/events/{id}/calendar.
+    observed_on: 'GET /v1/store/events (field: next_instance)'
+  - name: Supplier
+    domain: catalog
+    description: >-
+      The partner host that runs experiences. Has a name, page_title, HTML
+      description and its own permalink, and may have a white-label subdomain.
+    observed_on: GET /v1/store/events?include=supplier
+  - name: Category
+    domain: catalog
+    description: >-
+      A taxonomy node for experiences (Kochkurs, Cocktailkurs, Tasting), with
+      aggregate avg_review/total_reviews. Hierarchical via parent_id.
+    observed_on: GET /v1/store/categories
+  - name: CategoryPage
+    domain: content
+    description: >-
+      The SEO landing-page projection of a category, adding seo_title,
+      seo_meta_description, title and an HTML description body.
+    observed_on: GET /v1/categories
+  - name: Address
+    domain: catalog
+    description: >-
+      Where an experience takes place; supports the nested include path
+      `address.locality`. Null for NATIONWIDE/kit experiences that have no
+      fixed venue.
+    observed_on: GET /v1/store/events?include=address.locality
+  - name: Review
+    domain: social-proof
+    description: >-
+      Customer ratings. Exposed in aggregate on the experience as avg_review,
+      total_reviews and a review_breakdown histogram (1_star..5_star), and as
+      an `include=reviews` relation returning {rating, totalRating}.
+    observed_on: GET /v1/store/events?include=reviews
+  - name: Photo
+    domain: media
+    description: >-
+      An image with an integer id, filename, `thumb` and `cropped` CDN
+      renditions on media.gokonfetti.com, pixel dimensions and alt text.
+      Carried on the experience as both `photos` and `media`.
+    observed_on: GET /v1/store/events
+  - name: Money
+    domain: value-object
+    description: >-
+      Not an entity but the universal value object — {amount (minor units, as a
+      string), currency, formatted}. Used by default_price, retail_price,
+      original_price, min_price and max_price.
+    observed_on: GET /v1/store/events
+  - name: Customer
+    domain: account
+    description: >-
+      A registered buyer, created via POST /v1/register (email, password,
+      first_name) and read via GET /v1/user/profile with a balance in minor
+      units and an optional referralCoupon.
+    observed_on: GET /v1/user/profile (auth required — shape read from the first-party client)
+  - name: Order
+    domain: commerce
+    description: A completed purchase, listed via GET /v1/checkout/orders.
+    observed_on: GET /v1/checkout/orders (auth required)
+  - name: Cart
+    domain: commerce
+    description: >-
+      The in-progress basket, validated server-side via POST
+      /v1/checkout/cart/validate. Items carry a `type` of EVENT or GIFT_CARD
+      plus a quantity.
+    observed_on: POST /v1/checkout/cart/validate
+  - name: Coupon
+    domain: commerce
+    description: >-
+      A discount or voucher code validated against a cart via POST
+      /v1/store/coupon/{code}/validate, returning {coupon, discount}.
+    observed_on: POST /v1/store/coupon/{code}/validate
+  - name: GiftCard
+    domain: commerce
+    description: >-
+      A purchasable gift voucher; appears as a cart item type GIFT_CARD and as
+      a pricing `type` on the pricings endpoint. Merchandised on the public
+      /giftcard/ pages.
+    observed_on: POST /v1/store/events/{id}/pricings
+  - name: AddOn
+    domain: commerce
+    description: An extra purchasable alongside an experience.
+    observed_on: GET /v1/store/events/{id}/add-ons
+  - name: DateRequest
+    domain: demand-capture
+    description: >-
+      A lead recorded when a customer wants dates that are not on offer;
+      carries contact details, ticket count, date_type and requested dates.
+      konfetti can answer it with similar experiences.
+    observed_on: POST /v1/store/date-requests
+  - name: PrivateEventRequest
+    domain: demand-capture
+    description: >-
+      A corporate/team-event enquiry; adds company_name, city and a preferred
+      location to the date-request shape.
+    observed_on: POST /v1/store/private-event-requests
+
+relationships:
+  - {from: Supplier, to: EventMetaData, kind: has_many, via: supplier_id}
+  - {from: EventMetaData, to: Supplier, kind: belongs_to, via: 'include=supplier'}
+  - {from: EventMetaData, to: Category, kind: has_many, via: 'include=categories'}
+  - {from: EventMetaData, to: Address, kind: has_one, via: 'include=address'}
+  - {from: EventMetaData, to: Instance, kind: has_many, via: next_instance / calendar}
+  - {from: EventMetaData, to: Review, kind: has_many, via: 'include=reviews'}
+  - {from: EventMetaData, to: Photo, kind: has_many, via: photos / media}
+  - {from: EventMetaData, to: AddOn, kind: has_many, via: add-ons}
+  - {from: EventMetaData, to: Money, kind: has_many, via: default_price / retail_price / min_price / max_price}
+  - {from: Category, to: Category, kind: belongs_to, via: parent_id}
+  - {from: CategoryPage, to: Category, kind: has_one, via: id}
+  - {from: Address, to: Address, kind: has_one, via: locality}
+  - {from: Customer, to: Order, kind: has_many, via: 'GET /v1/checkout/orders'}
+  - {from: Customer, to: Coupon, kind: has_one, via: referralCoupon}
+  - {from: Cart, to: EventMetaData, kind: has_many, via: 'items[].type = EVENT'}
+  - {from: Cart, to: GiftCard, kind: has_many, via: 'items[].type = GIFT_CARD'}
+  - {from: Cart, to: Coupon, kind: has_one, via: coupon code}
+  - {from: Coupon, to: Supplier, kind: belongs_to, via: supplier_id}
+  - {from: DateRequest, to: EventMetaData, kind: belongs_to, via: event_description_id}
+  - {from: PrivateEventRequest, to: EventMetaData, kind: belongs_to, via: event_description_id}
+  - {from: Order, to: EventMetaData, kind: has_many, via: order items}
+
+scale_observed:
+  events_total: 7605
+  measured_on: '2026-07-19'
+  source: meta.pagination.total on GET /v1/store/events
+
+related:
+  openapi: openapi/konfetti-store-openapi.yml
+  conventions: conventions/konfetti-conventions.yml

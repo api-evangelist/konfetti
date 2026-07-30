@@ -1,0 +1,133 @@
+generated: '2026-07-19'
+method: derived
+source: >-
+  Derived from openapi/konfetti-store-openapi.yml and live probes of
+  https://api.gokonfetti.com/v1 on 2026-07-19. konfetti publishes no compliance
+  claims, no trust centre, no certification list and no standards conformance
+  statement anywhere on its public surface, so every assertion below is an
+  observation rather than a provider claim.
+description: >-
+  Which industry and cross-cutting standards the konfetti Store API actually
+  conforms to. The short answer is very few: it is a competent but private
+  Laravel/Apiato JSON API with no standards posture.
+
+standards:
+  - id: oauth2
+    name: OAuth 2.0 (RFC 6749)
+    conforms: partial
+    evidence: >-
+      POST /v1/oauth/token exists and returns the RFC 6749 section 5.2 error
+      envelope {"error":"unsupported_grant_type","error_description":...,"hint":...}
+      emitted by the League OAuth2 Server. Access tokens are presented as
+      `Authorization: Bearer <token>` (RFC 6750). However no authorization
+      endpoint, client registration process, grant-type list or scope reference
+      is published, so third parties cannot actually obtain a token.
+  - id: oauth2-metadata
+    name: OAuth 2.0 Authorization Server Metadata (RFC 8414)
+    conforms: false
+    evidence: >-
+      /.well-known/oauth-authorization-server returns 404 on api.gokonfetti.com
+      despite a live token endpoint. See well-known/konfetti-well-known.yml.
+  - id: oidc
+    name: OpenID Connect
+    conforms: false
+    evidence: /.well-known/openid-configuration returns 404 on every konfetti host.
+  - id: rfc9457
+    name: Problem Details for HTTP APIs (RFC 9457)
+    conforms: false
+    evidence: >-
+      Errors use a bespoke Apiato envelope served as application/json; no
+      application/problem+json response was observed, and 5xx responses return
+      HTML. See errors/konfetti-problem-types.yml.
+  - id: rfc9116
+    name: security.txt (RFC 9116)
+    conforms: false
+    evidence: /.well-known/security.txt returns 404 (or 403) on every konfetti host.
+  - id: rfc8594
+    name: Sunset header (RFC 8594)
+    conforms: false
+    evidence: >-
+      No Sunset or Deprecation header was observed on any response, and
+      konfetti publishes no deprecation policy. See
+      lifecycle/konfetti-lifecycle.yml.
+  - id: pagination
+    name: Paginated collections
+    conforms: true
+    evidence: >-
+      Every collection endpoint returns a consistent
+      meta.pagination {total, count, per_page, current_page, total_pages,
+      links.next/previous} block with absolute link URLs. Page-number style
+      via page/per_page/limit. See conventions/konfetti-conventions.yml.
+  - id: idempotency
+    name: Idempotent write requests (Idempotency-Key)
+    conforms: false
+    evidence: >-
+      No Idempotency-Key header support, replay behaviour or documentation was
+      observed on any write endpoint.
+  - id: json-api
+    name: 'JSON:API'
+    conforms: false
+    evidence: >-
+      Responses use the League Fractal `data`/`meta` convention, which
+      superficially resembles JSON:API but does not implement it — no
+      `type`/`attributes`/`relationships` members, no application/vnd.api+json
+      media type, no `links` at the resource level. Type is carried in a bespoke
+      `object` field instead.
+  - id: rate-limit-headers
+    name: RateLimit header fields for HTTP
+    conforms: false
+    evidence: No RateLimit-*, X-RateLimit-* or Retry-After header was observed.
+  - id: http-caching
+    name: HTTP conditional requests (ETag / Last-Modified)
+    conforms: false
+    evidence: >-
+      Catalog responses carry `cache-control: no-cache, private` with no
+      validator header, so conditional GETs are unavailable.
+  - id: iso4217
+    name: ISO 4217 currency codes
+    conforms: true
+    evidence: 'Money objects carry a `currency` field observed as EUR.'
+  - id: iso8601
+    name: ISO 8601 / RFC 3339 timestamps
+    conforms: true
+    evidence: >-
+      created_at, updated_at and instance start/end are returned as
+      `2024-10-21T10:50:25.000000Z` with an explicit `timezone` field
+      (Europe/Berlin) alongside.
+  - id: bcp47
+    name: BCP 47 language tags / content negotiation
+    conforms: partial
+    evidence: >-
+      Accept-Language drives the response locale and a `content-language`
+      header is returned, but konfetti uses underscore-form locale identifiers
+      (`de_DE`) rather than BCP 47 hyphen form (`de-DE`) in the response header
+      and in the `languages` array.
+  - id: gdpr
+    name: GDPR
+    conforms: assumed-by-jurisdiction
+    evidence: >-
+      Konfetti GmbH is a German company (Amtsgericht Charlottenburg HRB 229242
+      B, VAT DE344165820) publishing a privacy policy and an iubenda cookie
+      policy, so GDPR applies as a matter of law. konfetti publishes no data
+      processing agreement, sub-processor list or certification, so this is a
+      jurisdictional inference and NOT a verified compliance claim.
+  - id: bfsg-accessibility
+    name: Accessibility declaration (German BFSG / EAA)
+    conforms: true
+    evidence: >-
+      konfetti publishes an accessibility declaration at
+      https://gokonfetti.com/de-de/b2c/accessibility-declaration/ (HTTP 200).
+
+certifications_published: []
+certifications_note: >-
+  No SOC 2, ISO 27001, PCI DSS, HIPAA or FedRAMP claim appears anywhere on
+  konfetti's public surface, and konfetti operates no trust centre. No
+  `Compliance` pointer is emitted in apis.yml because there is no published
+  compliance programme to point at.
+
+related:
+  openapi: openapi/konfetti-store-openapi.yml
+  conventions: conventions/konfetti-conventions.yml
+  errors: errors/konfetti-problem-types.yml
+  well_known: well-known/konfetti-well-known.yml
+  lifecycle: lifecycle/konfetti-lifecycle.yml

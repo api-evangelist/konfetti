@@ -1,0 +1,132 @@
+generated: '2026-07-19'
+method: derived
+source: >-
+  Derived from error responses actually returned by
+  https://api.gokonfetti.com/v1 when probed on 2026-07-19, plus the error
+  handling written into the gokonfetti.com Nuxt bundles. konfetti publishes no
+  error reference, so every entry below is an observation with the response
+  body quoted verbatim where one was captured.
+description: >-
+  The error surface of the konfetti Store API. konfetti does not implement
+  RFC 9457 problem details; it returns a bespoke Apiato/Laravel JSON envelope,
+  and in several cases escapes JSON entirely.
+
+format: bespoke-json
+rfc9457: false
+media_type: application/json
+problem_media_type_supported: false
+
+envelopes:
+  - id: generic
+    shape: '{"message": string, "errors": array}'
+    example: '{"message":"The requested Resource was not found.","errors":[]}'
+    observed_on: POST /v1/oauth/token with a mistyped path; GET of unknown /v1 paths
+  - id: validation
+    shape: '{"message": string, "code": integer, "reason": string, "errors": {field: [string]}}'
+    example: >-
+      {"message":"Das email feld ist erforderlich. (and 2 more errors)",
+      "code":422,"reason":"requestValidation","errors":{"email":["Das email feld
+      ist erforderlich."],"password":["Das passwort feld ist
+      erforderlich."],"first_name":["Das vorname feld ist erforderlich."]}}
+    observed_on: POST /v1/register with an empty body
+    notes: >-
+      `message` is a summary with an "(and N more errors)" suffix; `errors` is
+      the per-field detail. Messages are pre-translated into the request locale
+      (German by default), so they are display-ready but not machine-stable —
+      key off the field names, never the message text.
+  - id: oauth
+    shape: '{"error": string, "error_description": string, "hint": string}'
+    example: >-
+      {"error":"unsupported_grant_type","error_description":"The authorization
+      grant type is not supported by the authorization server.","hint":"Check
+      that all required parameters have been provided"}
+    observed_on: POST /v1/oauth/token with an empty body
+    notes: RFC 6749 section 5.2 shape, emitted by the League OAuth2 Server.
+  - id: html
+    shape: Symfony HTML error page (not JSON)
+    observed_on: >-
+      GET /v1/store/events/{permalink}/add-ons and
+      GET /v1/store/events/{permalink}/calendar
+    notes: >-
+      Unhandled server errors bypass the JSON envelope entirely. Clients must
+      not assume a JSON body on 5xx — check the content-type before parsing.
+
+problem_types:
+  - status: 400
+    id: unsupported_grant_type
+    envelope: oauth
+    title: The authorization grant type is not supported by the authorization server.
+    remediation: >-
+      Send a `grant_type` the token endpoint supports. konfetti publishes no
+      client registration process or grant-type list, so supported grants are
+      unknown to third parties.
+    evidence: Observed verbatim on POST /v1/oauth/token.
+  - status: 403
+    id: coupon_invalid
+    envelope: generic
+    title: Coupon is not valid for this cart.
+    remediation: >-
+      Clear the stored coupon and re-prompt the customer. The first-party
+      client treats 403 from POST /v1/store/coupon/{code}/validate as a signal
+      to drop local coupon state, not as an authentication failure.
+    evidence: Error handling in the gokonfetti.com checkout bundle.
+  - status: 404
+    id: resource_not_found
+    envelope: generic
+    title: The requested Resource was not found.
+    remediation: >-
+      Check the path. Note that events are addressed by PERMALINK
+      (slug-with-id); passing the bare six-character id returns this error.
+    evidence: 'Observed verbatim: {"message":"The requested Resource was not found.","errors":[]}'
+  - status: 405
+    id: method_not_allowed
+    envelope: html
+    title: Method Not Allowed
+    remediation: >-
+      Use the correct verb. Several paths are POST-only
+      (/v1/store/events/{id}/pricings, /v1/store/events/{id}/subscribe,
+      /v1/store/private-event-requests, /v1/store/coupon/{code}/validate,
+      /v1/checkout/cart/validate, /v1/register, /v1/oauth/token).
+    evidence: Observed on GET of each POST-only path listed above.
+  - status: 422
+    id: requestValidation
+    envelope: validation
+    title: Request validation failed.
+    remediation: >-
+      Read `errors` and correct the named fields. The `reason` field is the
+      stable machine key; the human messages are localized.
+    evidence: Observed verbatim on POST /v1/register and GET /v1/store/metrics/{a}/{b}.
+  - status: 500
+    id: server_error
+    envelope: html
+    title: Server error.
+    remediation: >-
+      Retry with backoff. Because writes are not idempotent (see
+      conventions/konfetti-conventions.yml) retrying a POST after a 500 risks
+      duplicating it — prefer read-side reconciliation over blind retry.
+    evidence: >-
+      Observed on GET /v1/store/events/{permalink}/add-ons,
+      GET /v1/store/events/{permalink}/calendar and
+      GET /v1/store/customers/subscribe-newsletter.
+  - status: 302
+    id: unauthenticated_redirect
+    envelope: html
+    title: Redirect to login instead of 401.
+    remediation: >-
+      Treat a 302 to https://api.gokonfetti.com/login as "missing or expired
+      access token" and re-authenticate. Configure your HTTP client NOT to
+      follow redirects on API calls, or you will parse a login page as data.
+    evidence: >-
+      Observed on unauthenticated GET /v1/checkout/orders, GET /v1/user/profile,
+      GET /v1/store/date-requests and several other protected paths.
+
+gaps:
+  - No RFC 9457 problem+json support.
+  - No stable machine-readable error codes on the generic envelope (only a human `message`).
+  - No published error reference to enrich these titles or remediations against.
+  - 401 is never returned; authentication failure is signalled as a 302 redirect.
+
+related:
+  conventions: conventions/konfetti-conventions.yml
+  authentication: authentication/konfetti-authentication.yml
+  openapi: openapi/konfetti-store-openapi.yml
