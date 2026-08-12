@@ -153,6 +153,12 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgentSkill
+  url: skills/konfetti-search-experiences.md
+- type: MCPServer
+  url: mcp/konfetti-mcp.yml
+- type: Overlay
+  url: overlays/konfetti-store-overlay.yaml
 - type: DomainSecurity
   url: security/konfetti-domain-security.yml
 - type: Website
