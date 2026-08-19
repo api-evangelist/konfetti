@@ -1,0 +1,1338 @@
+{
+  "item": [
+    {
+      "id": "3b2ba011-2fe7-4af8-aa63-00f7d75ec311",
+      "name": "catalog",
+      "description": {
+        "content": "Public read access to experiences and categories.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b64e96f1-e15d-4f95-8e7c-85cf3553dadd",
+          "name": "List bookable experiences",
+          "request": {
+            "name": "List bookable experiences",
+            "description": {
+              "content": "Paginated list of experience/event descriptions. Observed 200 with `meta.pagination.total` of 7,605 records on 2026-07-19.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "store",
+                "events"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "include",
+                  "value": "<string>",
+                  "description": "Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "1-based page number."
+                },
+                {
+                  "disabled": false,
+                  "key": "per_page",
+                  "value": "10",
+                  "description": "Page size. Default 10 (observed)."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "Alternative page-size parameter used by the storefront; `limit=-1` requests an unpaginated result."
+                },
+                {
+                  "disabled": false,
+                  "key": "search",
+                  "value": "<string>",
+                  "description": "Semicolon-delimited `field:value` filter expression (l5-repository style). Observed fields: `supplier_id`, `hasEvent`, `type`, `category`."
+                },
+                {
+                  "disabled": false,
+                  "key": "searchFields",
+                  "value": "<string>",
+                  "description": "Comparison operator per search field, e.g. `supplier_id:!=` to negate."
+                },
+                {
+                  "disabled": false,
+                  "key": "orderBy",
+                  "value": "<string>",
+                  "description": "Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`."
+                },
+                {
+                  "disabled": false,
+                  "key": "sortedBy",
+                  "value": "<string>",
+                  "description": "Sort direction applied to orderBy."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9e9412b1-3510-4d31-822f-8b613d90210c",
+              "name": "A page of events.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "store",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include",
+                      "value": "supplier,categories"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "10"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "search",
+                      "value": "hasEvent:true;type:ONLINE;category:kochkurs"
+                    },
+                    {
+                      "key": "searchFields",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "orderBy",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sortedBy",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"object\": \"string\",\n      \"id\": \"string\",\n      \"title\": \"string\",\n      \"subtitle\": \"string\",\n      \"description\": \"string\",\n      \"type\": \"NATIONWIDE\",\n      \"permalink\": \"string\",\n      \"default_duration\": 4086,\n      \"duration_summary\": \"string\",\n      \"multiple_locations\": true,\n      \"default_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"retail_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"original_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"min_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"max_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"created_at\": \"1977-07-27T00:42:21.543Z\",\n      \"updated_at\": \"1971-08-21T11:38:28.390Z\",\n      \"readable_created_at\": \"string\",\n      \"readable_updated_at\": \"string\",\n      \"timezone\": \"Europe/Berlin\",\n      \"languages\": [\n        \"string\",\n        \"string\"\n      ],\n      \"is_team_event\": false,\n      \"is_group_pricing\": true,\n      \"next_instance\": {\n        \"id\": \"string\",\n        \"start\": \"2006-02-03T09:31:54.918Z\",\n        \"end\": \"2003-06-02T17:40:47.977Z\",\n        \"status\": \"OPEN\",\n        \"duration\": 8466,\n        \"date_type\": \"PUBLIC\",\n        \"available_tickets_quantity\": 1094,\n        \"private_min_tickets\": 1672,\n        \"private_max_tickets\": 5870,\n        \"min_advance_date\": \"1996-08-06T06:00:33.150Z\",\n        \"all_day\": false\n      },\n      \"min_date\": \"2002-03-09T21:57:20.937Z\",\n      \"max_date\": \"1971-05-31T03:26:50.978Z\",\n      \"min_duration\": 9910,\n      \"max_duration\": 7380,\n      \"avg_review\": 7770.743997016118,\n      \"total_reviews\": 4301,\n      \"review_breakdown\": {\n        \"1_star\": 2277,\n        \"2_star\": 9693,\n        \"3_star\": 8490,\n        \"4_star\": 5578,\n        \"5_star\": 1517\n      },\n      \"has_mobile_classes\": true,\n      \"has_shipping_costs\": 6269,\n      \"specialization\": \"KIT\",\n      \"has_promotions\": false,\n      \"photos\": [\n        {\n          \"id\": 2737,\n          \"filename\": \"string\",\n          \"thumb\": \"https://NSOonGvHVODQSBikvILApOdVWULeWfX.rpd2p-giGnhrnLLhDoCdQwi\",\n          \"cropped\": \"http://wfzAGC.cftfvYZwYlsWFspz7yeo9ofK.knw,2DGZ3wHMGsk\",\n          \"dimensions\": {\n            \"width\": 4488.490356198174,\n            \"height\": 729.0077676309303\n          },\n          \"alt\": \"string\"\n        },\n        {\n          \"id\": 3362,\n          \"filename\": \"string\",\n          \"thumb\": \"https://sWZmqkrisdCENujAwRxM.amAjBD-S.aWyGLnz-kttbyFm32X\",\n          \"cropped\": \"http://SAtrABfUzXaHKJkLgWYlaizEywjCWBX.prtP2LVrpanVsErcZgR9OS7.sFmZCf5iFlNYG3ab84zbq\",\n          \"dimensions\": {\n            \"width\": 4991.451355662999,\n            \"height\": 6402.558460696243\n          },\n          \"alt\": \"string\"\n        }\n      ],\n      \"media\": [\n        {\n          \"id\": 509,\n          \"filename\": \"string\",\n          \"thumb\": \"http://NwYKhKvddbTr.svxoWBxy-0KEuMI7XzlPsfIKkLZMsQzQYwEBJPocKcYjrV42\",\n          \"cropped\": \"http://NgUdwVnuOVSQDnChmxrWbTtg.qhbGpBbpl-zVWnl.EMY13IxzyDmNbxaK3NKF8nf8lCVmw-t2t\",\n          \"dimensions\": {\n            \"width\": 2532.140370412568,\n            \"height\": 2792.6803713495506\n          },\n          \"alt\": \"string\"\n        },\n        {\n          \"id\": 4777,\n          \"filename\": \"string\",\n          \"thumb\": \"https://kOBGfdNEgDUUR.zxzmiappY9y-\",\n          \"cropped\": \"http://QDRyqJyoA.yitA2SVlqEM00RQJYG0jVlJ1.KVjQqLCbbvzo370AmVirkh9b\",\n          \"dimensions\": {\n            \"width\": 824.5119490318831,\n            \"height\": 8134.909578579326\n          },\n          \"alt\": \"string\"\n        }\n      ],\n      \"categories\": {\n        \"data\": [\n          {\n            \"object\": \"string\",\n            \"id\": \"string\",\n            \"name\": \"string\",\n            \"slug\": \"string\",\n            \"featured\": false,\n            \"avg_review\": 8292.092897969895,\n            \"total_reviews\": 4184\n          },\n          {\n            \"object\": \"string\",\n            \"id\": \"string\",\n            \"name\": \"string\",\n            \"slug\": \"string\",\n            \"featured\": false,\n            \"avg_review\": 6520.340307986347,\n            \"total_reviews\": 5636\n          }\n        ]\n      },\n      \"supplier\": {\n        \"data\": {\n          \"object\": \"string\",\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"page_title\": \"string\",\n          \"permalink\": \"string\",\n          \"description\": \"string\"\n        }\n      },\n      \"address\": {},\n      \"reviews\": {\n        \"data\": {\n          \"rating\": 6426.033729765186,\n          \"totalRating\": 8401\n        }\n      }\n    },\n    {\n      \"object\": \"string\",\n      \"id\": \"string\",\n      \"title\": \"string\",\n      \"subtitle\": \"string\",\n      \"description\": \"string\",\n      \"type\": \"NATIONWIDE\",\n      \"permalink\": \"string\",\n      \"default_duration\": 3186,\n      \"duration_summary\": \"string\",\n      \"multiple_locations\": false,\n      \"default_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"retail_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"original_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"min_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"max_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"created_at\": \"2000-11-17T08:35:02.093Z\",\n      \"updated_at\": \"1991-06-26T03:42:11.151Z\",\n      \"readable_created_at\": \"string\",\n      \"readable_updated_at\": \"string\",\n      \"timezone\": \"Europe/Berlin\",\n      \"languages\": [\n        \"string\",\n        \"string\"\n      ],\n      \"is_team_event\": false,\n      \"is_group_pricing\": false,\n      \"next_instance\": {\n        \"id\": \"string\",\n        \"start\": \"2023-03-31T10:24:01.109Z\",\n        \"end\": \"1989-04-16T14:34:21.022Z\",\n        \"status\": \"OPEN\",\n        \"duration\": 9484,\n        \"date_type\": \"PUBLIC\",\n        \"available_tickets_quantity\": 5324,\n        \"private_min_tickets\": 3402,\n        \"private_max_tickets\": 6637,\n        \"min_advance_date\": \"1968-01-21T19:09:55.927Z\",\n        \"all_day\": false\n      },\n      \"min_date\": \"1993-03-02T14:42:35.068Z\",\n      \"max_date\": \"2004-05-14T21:49:50.779Z\",\n      \"min_duration\": 7908,\n      \"max_duration\": 4216,\n      \"avg_review\": 3339.873350352409,\n      \"total_reviews\": 9,\n      \"review_breakdown\": {\n        \"1_star\": 4479,\n        \"2_star\": 6324,\n        \"3_star\": 5460,\n        \"4_star\": 8263,\n        \"5_star\": 1171\n      },\n      \"has_mobile_classes\": false,\n      \"has_shipping_costs\": 5331,\n      \"specialization\": \"KIT\",\n      \"has_promotions\": false,\n      \"photos\": [\n        {\n          \"id\": 90,\n          \"filename\": \"string\",\n          \"thumb\": \"http://bYQRlnyjHDRdH.dzwvdmt-5pWnfM74STZjR4SL5lUL2zVhbJ+PKLcXS\",\n          \"cropped\": \"https://AcBNOWHidAlilDaVBmndTs.ekQhwgJ4eY3fE0d55R25IM1bgmO,ezghm2HbVvqAO\",\n          \"dimensions\": {\n            \"width\": 6622.593466459663,\n            \"height\": 8347.386366980303\n          },\n          \"alt\": \"string\"\n        },\n        {\n          \"id\": 6468,\n          \"filename\": \"string\",\n          \"thumb\": \"https://YtsyhTLfqGcWKZBdQaQiz.mvcWbp3ddhb+W2moRFQnFVp-\",\n          \"cropped\": \"http://RCuKGzsiFRBRRVcdiXRYznmvUw.bguswivihjPjp-dv6yn+hdHbaWw7HzH8NWtDtuxbnweKfo9Dhab\",\n          \"dimensions\": {\n            \"width\": 2694.6361130246564,\n            \"height\": 6859.1835053158675\n          },\n          \"alt\": \"string\"\n        }\n      ],\n      \"media\": [\n        {\n          \"id\": 3581,\n          \"filename\": \"string\",\n          \"thumb\": \"https://yPPanxfOisfjtEqtoFAAoJRMipxhhxMa.nbD63uttC0pEGmSaUD-A\",\n          \"cropped\": \"https://scaJSEofITTuPdVOd.xmcdemHLuJUHHdHw6wF5pIqW9tcI9qa7Leo7zg1vQc7LH-1PWb,LzWZ0v6b.8\",\n          \"dimensions\": {\n            \"width\": 967.499560234295,\n            \"height\": 3189.364433010732\n          },\n          \"alt\": \"string\"\n        },\n        {\n          \"id\": 2845,\n          \"filename\": \"string\",\n          \"thumb\": \"https://tSCwDPSu.leamzyex0L9hx.\",\n          \"cropped\": \"https://cdSIt.iixB\",\n          \"dimensions\": {\n            \"width\": 7261.213462951828,\n            \"height\": 1201.4244476602787\n          },\n          \"alt\": \"string\"\n        }\n      ],\n      \"categories\": {\n        \"data\": [\n          {\n            \"object\": \"string\",\n            \"id\": \"string\",\n            \"name\": \"string\",\n            \"slug\": \"string\",\n            \"featured\": true,\n            \"avg_review\": 9751.462891279283,\n            \"total_reviews\": 8750\n          },\n          {\n            \"object\": \"string\",\n            \"id\": \"string\",\n            \"name\": \"string\",\n            \"slug\": \"string\",\n            \"featured\": true,\n            \"avg_review\": 7133.205974439972,\n            \"total_reviews\": 9570\n          }\n        ]\n      },\n      \"supplier\": {\n        \"data\": {\n          \"object\": \"string\",\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"page_title\": \"string\",\n          \"permalink\": \"string\",\n          \"description\": \"string\"\n        }\n      },\n      \"address\": {},\n      \"reviews\": {\n        \"data\": {\n          \"rating\": 1111.9011612747142,\n          \"totalRating\": 138\n        }\n      }\n    }\n  ],\n  \"meta\": {\n    \"include\": [\n      \"string\",\n      \"string\"\n    ],\n    \"pagination\": {\n      \"total\": 4994,\n      \"count\": 3544,\n      \"per_page\": 9678,\n      \"current_page\": 7632,\n      \"total_pages\": 3678,\n      \"links\": {\n        \"previous\": \"http://kwXKjRozqeO.smzfeli7-FSxfQIpR+0cosqev2mQYTHri0cE\",\n        \"next\": \"http://VaXGmlDVTjwuaRXOcEJZUYBuzNmCmvJp.ieoaMD99IGnAMEq6Mb5rk1ztREcqJ6\"\n      }\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e8b16568-27b8-4cfe-9cd4-6315a204a9a0",
+          "name": "Retrieve one experience by permalink",
+          "request": {
+            "name": "Retrieve one experience by permalink",
+            "description": {
+              "content": "Observed 200 for a permalink such as `pasta-play-die-interaktive-kochbox-mit-erlebnisfaktor-xyn62z`; the bare six-character id returned 404, so the slug-with-id permalink is the lookup key.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "store",
+                "events",
+                ":permalink"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "include",
+                  "value": "<string>",
+                  "description": "Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "permalink",
+                  "description": "(Required) Slug-with-id permalink (e.g. `cocktailkurs-in-muenchen-0w1dlw`)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "6bebfac9-1323-4032-85cb-f7aeff500e2e",
+              "name": "The event, including a full HTML `description` field.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "store",
+                    "events",
+                    ":permalink"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include",
+                      "value": "supplier,categories"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "permalink",
+                      "description": "(Required) Slug-with-id permalink (e.g. `cocktailkurs-in-muenchen-0w1dlw`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"object\": \"string\",\n    \"id\": \"string\",\n    \"title\": \"string\",\n    \"subtitle\": \"string\",\n    \"description\": \"string\",\n    \"type\": \"NATIONWIDE\",\n    \"permalink\": \"string\",\n    \"default_duration\": 8211,\n    \"duration_summary\": \"string\",\n    \"multiple_locations\": true,\n    \"default_price\": {\n      \"amount\": \"string\",\n      \"currency\": \"EUR\",\n      \"formatted\": \"29,00 €\"\n    },\n    \"retail_price\": {\n      \"amount\": \"string\",\n      \"currency\": \"EUR\",\n      \"formatted\": \"29,00 €\"\n    },\n    \"original_price\": {\n      \"amount\": \"string\",\n      \"currency\": \"EUR\",\n      \"formatted\": \"29,00 €\"\n    },\n    \"min_price\": {\n      \"amount\": \"string\",\n      \"currency\": \"EUR\",\n      \"formatted\": \"29,00 €\"\n    },\n    \"max_price\": {\n      \"amount\": \"string\",\n      \"currency\": \"EUR\",\n      \"formatted\": \"29,00 €\"\n    },\n    \"created_at\": \"2024-06-26T10:22:33.475Z\",\n    \"updated_at\": \"1997-03-29T01:39:45.563Z\",\n    \"readable_created_at\": \"string\",\n    \"readable_updated_at\": \"string\",\n    \"timezone\": \"Europe/Berlin\",\n    \"languages\": [\n      \"string\",\n      \"string\"\n    ],\n    \"is_team_event\": false,\n    \"is_group_pricing\": true,\n    \"next_instance\": {\n      \"id\": \"string\",\n      \"start\": \"1957-12-29T19:19:56.928Z\",\n      \"end\": \"2023-10-08T20:09:08.331Z\",\n      \"status\": \"OPEN\",\n      \"duration\": 6803,\n      \"date_type\": \"PRIVATE\",\n      \"available_tickets_quantity\": 6989,\n      \"private_min_tickets\": 2034,\n      \"private_max_tickets\": 8841,\n      \"min_advance_date\": \"1957-02-26T11:45:08.626Z\",\n      \"all_day\": false\n    },\n    \"min_date\": \"1966-09-26T06:22:02.785Z\",\n    \"max_date\": \"1954-08-08T04:49:05.462Z\",\n    \"min_duration\": 4603,\n    \"max_duration\": 537,\n    \"avg_review\": 9447.175256269764,\n    \"total_reviews\": 950,\n    \"review_breakdown\": {\n      \"1_star\": 7446,\n      \"2_star\": 3261,\n      \"3_star\": 6445,\n      \"4_star\": 8221,\n      \"5_star\": 508\n    },\n    \"has_mobile_classes\": true,\n    \"has_shipping_costs\": 3209,\n    \"specialization\": \"KIT\",\n    \"has_promotions\": true,\n    \"photos\": [\n      {\n        \"id\": 3716,\n        \"filename\": \"string\",\n        \"thumb\": \"http://vSYMaJPizWklxgOQQPAvaSIXiK.jqgux6rpyzEBPEOL6tsnt,MzV.\",\n        \"cropped\": \"http://eZEAJeLHFITaEc.wfwjoKh,1zsbgAOdpSCpCUWlwCLEYXZqziZXK+J,5awjNoTt0DUzSxaDAyfvJaMXBdBQTTLaYT\",\n        \"dimensions\": {\n          \"width\": 194.59519548187475,\n          \"height\": 9590.372453216083\n        },\n        \"alt\": \"string\"\n      },\n      {\n        \"id\": 9093,\n        \"filename\": \"string\",\n        \"thumb\": \"https://dbtsWGpEdifCEAyfzLqtzRz.oyy2xYNsdSGCBv6F1po7TWvk4kFVI6+3DqJiEr9Xcq8HjA0SRafug15aNM\",\n        \"cropped\": \"https://l.kugnOrJiSSg3FodFJP+HvLcx8Yu7Ow\",\n        \"dimensions\": {\n          \"width\": 9833.095533231446,\n          \"height\": 4067.235794140173\n        },\n        \"alt\": \"string\"\n      }\n    ],\n    \"media\": [\n      {\n        \"id\": 7223,\n        \"filename\": \"string\",\n        \"thumb\": \"https://V.impbi,npMOf2,RMObswjy4qKfNAIIwQc6chOyf7QLGaNKi7jeN3\",\n        \"cropped\": \"http://PPqYQMcCeKlXVPKwvbmfRQIpvMbuGa.akHC-\",\n        \"dimensions\": {\n          \"width\": 5091.420407794972,\n          \"height\": 3081.748105100771\n        },\n        \"alt\": \"string\"\n      },\n      {\n        \"id\": 4840,\n        \"filename\": \"string\",\n        \"thumb\": \"http://weAgeUJeFg.iyqgDlTGm-z.azUTO+K1,c3K\",\n        \"cropped\": \"http://AeC.gnDm8waKuCun,IRQ7\",\n        \"dimensions\": {\n          \"width\": 2988.5259424965725,\n          \"height\": 3638.0726345904004\n        },\n        \"alt\": \"string\"\n      }\n    ],\n    \"categories\": {\n      \"data\": [\n        {\n          \"object\": \"string\",\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"slug\": \"string\",\n          \"featured\": true,\n          \"avg_review\": 2533.795131602524,\n          \"total_reviews\": 6604\n        },\n        {\n          \"object\": \"string\",\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"slug\": \"string\",\n          \"featured\": false,\n          \"avg_review\": 3095.885232404956,\n          \"total_reviews\": 9860\n        }\n      ]\n    },\n    \"supplier\": {\n      \"data\": {\n        \"object\": \"string\",\n        \"id\": \"string\",\n        \"name\": \"string\",\n        \"page_title\": \"string\",\n        \"permalink\": \"string\",\n        \"description\": \"string\"\n      }\n    },\n    \"address\": {},\n    \"reviews\": {\n      \"data\": {\n        \"rating\": 4581.214763650666,\n        \"totalRating\": 6131\n      }\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d7daaad7-3bc9-41dd-917f-64e495f23a40",
+              "name": "Resource not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "store",
+                    "events",
+                    ":permalink"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include",
+                      "value": "supplier,categories"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "permalink",
+                      "description": "(Required) Slug-with-id permalink (e.g. `cocktailkurs-in-muenchen-0w1dlw`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"errors\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9c08bd47-43fa-41e8-9d7f-8c444975b9e5",
+          "name": "List experiences similar to a given one",
+          "request": {
+            "name": "List experiences similar to a given one",
+            "description": {
+              "content": "Observed 200. The storefront calls this with `orderBy=distance&sortedBy=asc&search=supplier_id:<id>;hasEvent:true&searchFields=supplier_id:!=`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "store",
+                "events",
+                ":permalink",
+                "similar"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "include",
+                  "value": "<string>",
+                  "description": "Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`."
+                },
+                {
+                  "disabled": false,
+                  "key": "search",
+                  "value": "<string>",
+                  "description": "Semicolon-delimited `field:value` filter expression (l5-repository style). Observed fields: `supplier_id`, `hasEvent`, `type`, `category`."
+                },
+                {
+                  "disabled": false,
+                  "key": "searchFields",
+                  "value": "<string>",
+                  "description": "Comparison operator per search field, e.g. `supplier_id:!=` to negate."
+                },
+                {
+                  "disabled": false,
+                  "key": "orderBy",
+                  "value": "<string>",
+                  "description": "Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`."
+                },
+                {
+                  "disabled": false,
+                  "key": "sortedBy",
+                  "value": "<string>",
+                  "description": "Sort direction applied to orderBy."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "permalink",
+                  "description": "(Required) Slug-with-id permalink (e.g. `cocktailkurs-in-muenchen-0w1dlw`)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f82dbbb8-7cd0-4a76-b915-cdc055e99ddc",
+              "name": "A page of similar events.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "store",
+                    "events",
+                    ":permalink",
+                    "similar"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include",
+                      "value": "supplier,categories"
+                    },
+                    {
+                      "key": "search",
+                      "value": "hasEvent:true;type:ONLINE;category:kochkurs"
+                    },
+                    {
+                      "key": "searchFields",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "orderBy",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sortedBy",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "permalink",
+                      "description": "(Required) Slug-with-id permalink (e.g. `cocktailkurs-in-muenchen-0w1dlw`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"object\": \"string\",\n      \"id\": \"string\",\n      \"title\": \"string\",\n      \"subtitle\": \"string\",\n      \"description\": \"string\",\n      \"type\": \"NATIONWIDE\",\n      \"permalink\": \"string\",\n      \"default_duration\": 4086,\n      \"duration_summary\": \"string\",\n      \"multiple_locations\": true,\n      \"default_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"retail_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"original_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"min_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"max_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"created_at\": \"1977-07-27T00:42:21.543Z\",\n      \"updated_at\": \"1971-08-21T11:38:28.390Z\",\n      \"readable_created_at\": \"string\",\n      \"readable_updated_at\": \"string\",\n      \"timezone\": \"Europe/Berlin\",\n      \"languages\": [\n        \"string\",\n        \"string\"\n      ],\n      \"is_team_event\": false,\n      \"is_group_pricing\": true,\n      \"next_instance\": {\n        \"id\": \"string\",\n        \"start\": \"2006-02-03T09:31:54.918Z\",\n        \"end\": \"2003-06-02T17:40:47.977Z\",\n        \"status\": \"OPEN\",\n        \"duration\": 8466,\n        \"date_type\": \"PUBLIC\",\n        \"available_tickets_quantity\": 1094,\n        \"private_min_tickets\": 1672,\n        \"private_max_tickets\": 5870,\n        \"min_advance_date\": \"1996-08-06T06:00:33.150Z\",\n        \"all_day\": false\n      },\n      \"min_date\": \"2002-03-09T21:57:20.937Z\",\n      \"max_date\": \"1971-05-31T03:26:50.978Z\",\n      \"min_duration\": 9910,\n      \"max_duration\": 7380,\n      \"avg_review\": 7770.743997016118,\n      \"total_reviews\": 4301,\n      \"review_breakdown\": {\n        \"1_star\": 2277,\n        \"2_star\": 9693,\n        \"3_star\": 8490,\n        \"4_star\": 5578,\n        \"5_star\": 1517\n      },\n      \"has_mobile_classes\": true,\n      \"has_shipping_costs\": 6269,\n      \"specialization\": \"KIT\",\n      \"has_promotions\": false,\n      \"photos\": [\n        {\n          \"id\": 2737,\n          \"filename\": \"string\",\n          \"thumb\": \"https://NSOonGvHVODQSBikvILApOdVWULeWfX.rpd2p-giGnhrnLLhDoCdQwi\",\n          \"cropped\": \"http://wfzAGC.cftfvYZwYlsWFspz7yeo9ofK.knw,2DGZ3wHMGsk\",\n          \"dimensions\": {\n            \"width\": 4488.490356198174,\n            \"height\": 729.0077676309303\n          },\n          \"alt\": \"string\"\n        },\n        {\n          \"id\": 3362,\n          \"filename\": \"string\",\n          \"thumb\": \"https://sWZmqkrisdCENujAwRxM.amAjBD-S.aWyGLnz-kttbyFm32X\",\n          \"cropped\": \"http://SAtrABfUzXaHKJkLgWYlaizEywjCWBX.prtP2LVrpanVsErcZgR9OS7.sFmZCf5iFlNYG3ab84zbq\",\n          \"dimensions\": {\n            \"width\": 4991.451355662999,\n            \"height\": 6402.558460696243\n          },\n          \"alt\": \"string\"\n        }\n      ],\n      \"media\": [\n        {\n          \"id\": 509,\n          \"filename\": \"string\",\n          \"thumb\": \"http://NwYKhKvddbTr.svxoWBxy-0KEuMI7XzlPsfIKkLZMsQzQYwEBJPocKcYjrV42\",\n          \"cropped\": \"http://NgUdwVnuOVSQDnChmxrWbTtg.qhbGpBbpl-zVWnl.EMY13IxzyDmNbxaK3NKF8nf8lCVmw-t2t\",\n          \"dimensions\": {\n            \"width\": 2532.140370412568,\n            \"height\": 2792.6803713495506\n          },\n          \"alt\": \"string\"\n        },\n        {\n          \"id\": 4777,\n          \"filename\": \"string\",\n          \"thumb\": \"https://kOBGfdNEgDUUR.zxzmiappY9y-\",\n          \"cropped\": \"http://QDRyqJyoA.yitA2SVlqEM00RQJYG0jVlJ1.KVjQqLCbbvzo370AmVirkh9b\",\n          \"dimensions\": {\n            \"width\": 824.5119490318831,\n            \"height\": 8134.909578579326\n          },\n          \"alt\": \"string\"\n        }\n      ],\n      \"categories\": {\n        \"data\": [\n          {\n            \"object\": \"string\",\n            \"id\": \"string\",\n            \"name\": \"string\",\n            \"slug\": \"string\",\n            \"featured\": false,\n            \"avg_review\": 8292.092897969895,\n            \"total_reviews\": 4184\n          },\n          {\n            \"object\": \"string\",\n            \"id\": \"string\",\n            \"name\": \"string\",\n            \"slug\": \"string\",\n            \"featured\": false,\n            \"avg_review\": 6520.340307986347,\n            \"total_reviews\": 5636\n          }\n        ]\n      },\n      \"supplier\": {\n        \"data\": {\n          \"object\": \"string\",\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"page_title\": \"string\",\n          \"permalink\": \"string\",\n          \"description\": \"string\"\n        }\n      },\n      \"address\": {},\n      \"reviews\": {\n        \"data\": {\n          \"rating\": 6426.033729765186,\n          \"totalRating\": 8401\n        }\n      }\n    },\n    {\n      \"object\": \"string\",\n      \"id\": \"string\",\n      \"title\": \"string\",\n      \"subtitle\": \"string\",\n      \"description\": \"string\",\n      \"type\": \"NATIONWIDE\",\n      \"permalink\": \"string\",\n      \"default_duration\": 3186,\n      \"duration_summary\": \"string\",\n      \"multiple_locations\": false,\n      \"default_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"retail_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"original_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"min_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"max_price\": {\n        \"amount\": \"string\",\n        \"currency\": \"EUR\",\n        \"formatted\": \"29,00 €\"\n      },\n      \"created_at\": \"2000-11-17T08:35:02.093Z\",\n      \"updated_at\": \"1991-06-26T03:42:11.151Z\",\n      \"readable_created_at\": \"string\",\n      \"readable_updated_at\": \"string\",\n      \"timezone\": \"Europe/Berlin\",\n      \"languages\": [\n        \"string\",\n        \"string\"\n      ],\n      \"is_team_event\": false,\n      \"is_group_pricing\": false,\n      \"next_instance\": {\n        \"id\": \"string\",\n        \"start\": \"2023-03-31T10:24:01.109Z\",\n        \"end\": \"1989-04-16T14:34:21.022Z\",\n        \"status\": \"OPEN\",\n        \"duration\": 9484,\n        \"date_type\": \"PUBLIC\",\n        \"available_tickets_quantity\": 5324,\n        \"private_min_tickets\": 3402,\n        \"private_max_tickets\": 6637,\n        \"min_advance_date\": \"1968-01-21T19:09:55.927Z\",\n        \"all_day\": false\n      },\n      \"min_date\": \"1993-03-02T14:42:35.068Z\",\n      \"max_date\": \"2004-05-14T21:49:50.779Z\",\n      \"min_duration\": 7908,\n      \"max_duration\": 4216,\n      \"avg_review\": 3339.873350352409,\n      \"total_reviews\": 9,\n      \"review_breakdown\": {\n        \"1_star\": 4479,\n        \"2_star\": 6324,\n        \"3_star\": 5460,\n        \"4_star\": 8263,\n        \"5_star\": 1171\n      },\n      \"has_mobile_classes\": false,\n      \"has_shipping_costs\": 5331,\n      \"specialization\": \"KIT\",\n      \"has_promotions\": false,\n      \"photos\": [\n        {\n          \"id\": 90,\n          \"filename\": \"string\",\n          \"thumb\": \"http://bYQRlnyjHDRdH.dzwvdmt-5pWnfM74STZjR4SL5lUL2zVhbJ+PKLcXS\",\n          \"cropped\": \"https://AcBNOWHidAlilDaVBmndTs.ekQhwgJ4eY3fE0d55R25IM1bgmO,ezghm2HbVvqAO\",\n          \"dimensions\": {\n            \"width\": 6622.593466459663,\n            \"height\": 8347.386366980303\n          },\n          \"alt\": \"string\"\n        },\n        {\n          \"id\": 6468,\n          \"filename\": \"string\",\n          \"thumb\": \"https://YtsyhTLfqGcWKZBdQaQiz.mvcWbp3ddhb+W2moRFQnFVp-\",\n          \"cropped\": \"http://RCuKGzsiFRBRRVcdiXRYznmvUw.bguswivihjPjp-dv6yn+hdHbaWw7HzH8NWtDtuxbnweKfo9Dhab\",\n          \"dimensions\": {\n            \"width\": 2694.6361130246564,\n            \"height\": 6859.1835053158675\n          },\n          \"alt\": \"string\"\n        }\n      ],\n      \"media\": [\n        {\n          \"id\": 3581,\n          \"filename\": \"string\",\n          \"thumb\": \"https://yPPanxfOisfjtEqtoFAAoJRMipxhhxMa.nbD63uttC0pEGmSaUD-A\",\n          \"cropped\": \"https://scaJSEofITTuPdVOd.xmcdemHLuJUHHdHw6wF5pIqW9tcI9qa7Leo7zg1vQc7LH-1PWb,LzWZ0v6b.8\",\n          \"dimensions\": {\n            \"width\": 967.499560234295,\n            \"height\": 3189.364433010732\n          },\n          \"alt\": \"string\"\n        },\n        {\n          \"id\": 2845,\n          \"filename\": \"string\",\n          \"thumb\": \"https://tSCwDPSu.leamzyex0L9hx.\",\n          \"cropped\": \"https://cdSIt.iixB\",\n          \"dimensions\": {\n            \"width\": 7261.213462951828,\n            \"height\": 1201.4244476602787\n          },\n          \"alt\": \"string\"\n        }\n      ],\n      \"categories\": {\n        \"data\": [\n          {\n            \"object\": \"string\",\n            \"id\": \"string\",\n            \"name\": \"string\",\n            \"slug\": \"string\",\n            \"featured\": true,\n            \"avg_review\": 9751.462891279283,\n            \"total_reviews\": 8750\n          },\n          {\n            \"object\": \"string\",\n            \"id\": \"string\",\n            \"name\": \"string\",\n            \"slug\": \"string\",\n            \"featured\": true,\n            \"avg_review\": 7133.205974439972,\n            \"total_reviews\": 9570\n          }\n        ]\n      },\n      \"supplier\": {\n        \"data\": {\n          \"object\": \"string\",\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"page_title\": \"string\",\n          \"permalink\": \"string\",\n          \"description\": \"string\"\n        }\n      },\n      \"address\": {},\n      \"reviews\": {\n        \"data\": {\n          \"rating\": 1111.9011612747142,\n          \"totalRating\": 138\n        }\n      }\n    }\n  ],\n  \"meta\": {\n    \"include\": [\n      \"string\",\n      \"string\"\n    ],\n    \"pagination\": {\n      \"total\": 4994,\n      \"count\": 3544,\n      \"per_page\": 9678,\n      \"current_page\": 7632,\n      \"total_pages\": 3678,\n      \"links\": {\n        \"previous\": \"http://kwXKjRozqeO.smzfeli7-FSxfQIpR+0cosqev2mQYTHri0cE\",\n        \"next\": \"http://VaXGmlDVTjwuaRXOcEJZUYBuzNmCmvJp.ieoaMD99IGnAMEq6Mb5rk1ztREcqJ6\"\n      }\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b16aa388-ca99-48ab-8b38-51945ec4bc60",
+          "name": "Calculate pricing for a ticket selection",
+          "request": {
+            "name": "Calculate pricing for a ticket selection",
+            "description": {
+              "content": "POST-only (GET returned 405 Method Not Allowed). Request body shape is taken verbatim from the storefront bundle. The storefront also sends an `Accept-Language` header to select locale/currency formatting.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "store",
+                "events",
+                ":id",
+                "pricings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) Six-character konfetti resource id (e.g. `xyn62z`)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event_id\": \"<string>\",\n  \"private\": \"<boolean>\",\n  \"ticket_categories\": [\n    {\n      \"category\": \"<string>\",\n      \"amount\": \"<integer>\"\n    },\n    {\n      \"category\": \"<string>\",\n      \"amount\": \"<integer>\"\n    }\n  ],\n  \"type\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "9403f342-fc03-4c9b-ad5d-bb38ca5ee148",
+              "name": "Calculated pricing for the selection.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "store",
+                    "events",
+                    ":id",
+                    "pricings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Six-character konfetti resource id (e.g. `xyn62z`)."
+                    }
+                  ]
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"event_id\": \"<string>\",\n  \"private\": \"<boolean>\",\n  \"ticket_categories\": [\n    {\n      \"category\": \"ADULT\",\n      \"amount\": \"<integer>\"\n    },\n    {\n      \"category\": \"ADULT\",\n      \"amount\": \"<integer>\"\n    }\n  ],\n  \"type\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "7105bd60-d9a8-4de9-8b8b-a39c441aeb0a",
+              "name": "HTTP method not allowed for this path.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "store",
+                    "events",
+                    ":id",
+                    "pricings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Six-character konfetti resource id (e.g. `xyn62z`)."
+                    }
+                  ]
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"event_id\": \"<string>\",\n  \"private\": \"<boolean>\",\n  \"ticket_categories\": [\n    {\n      \"category\": \"ADULT\",\n      \"amount\": \"<integer>\"\n    },\n    {\n      \"category\": \"ADULT\",\n      \"amount\": \"<integer>\"\n    }\n  ],\n  \"type\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "83f288bc-35c2-41f0-92a5-b969613d8041",
+          "name": "List purchasable add-ons for an experience",
+          "request": {
+            "name": "List purchasable add-ons for an experience",
+            "description": {
+              "content": "Named by the storefront bundle as a GET. Probing it for an experience with no add-ons returned HTTP 500, so the endpoint exists but its empty-set behaviour is unstable; response schema not modelled.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "store",
+                "events",
+                ":id",
+                "add-ons"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) Six-character konfetti resource id (e.g. `xyn62z`)."
+                }
+              ]
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8d067b42-dece-4ca3-bd23-8a3532e04771",
+              "name": "Add-ons for the experience.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "store",
+                    "events",
+                    ":id",
+                    "add-ons"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Six-character konfetti resource id (e.g. `xyn62z`)."
+                    }
+                  ]
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "7ee02b10-1809-46c5-8d93-c01d9c9d2699",
+              "name": "Server error.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "store",
+                    "events",
+                    ":id",
+                    "add-ons"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Six-character konfetti resource id (e.g. `xyn62z`)."
+                    }
+                  ]
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "52a7152d-277b-424e-b4e8-c3425b33c848",
+          "name": "Retrieve the availability calendar for an experience",
+          "request": {
+            "name": "Retrieve the availability calendar for an experience",
+            "description": {
+              "content": "Named by the storefront bundle as a GET. Observed HTTP 500 for the probed experience; response schema not modelled.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "store",
+                "events",
+                ":id",
+                "calendar"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) Six-character konfetti resource id (e.g. `xyn62z`)."
+                }
+              ]
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "64c23b44-d27f-403d-a79d-87972f258d55",
+              "name": "Availability calendar.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "store",
+                    "events",
+                    ":id",
+                    "calendar"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Six-character konfetti resource id (e.g. `xyn62z`)."
+                    }
+                  ]
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "67c0ccf9-0352-4048-bba1-2e4c0699eae3",
+              "name": "Server error.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "store",
+                    "events",
+                    ":id",
+                    "calendar"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Six-character konfetti resource id (e.g. `xyn62z`)."
+                    }
+                  ]
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a6f20b72-e9d5-404a-ab2f-fbeb354b1404",
+          "name": "List experience categories",
+          "request": {
+            "name": "List experience categories",
+            "description": {
+              "content": "Observed 200. Supports `include=thumbnail` per the response `meta.include`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "store",
+                "categories"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "include",
+                  "value": "<string>",
+                  "description": "Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b59e04c7-4298-4672-b744-abb8af7c9fe0",
+              "name": "All categories.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "store",
+                    "categories"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include",
+                      "value": "supplier,categories"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"object\": \"string\",\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"slug\": \"string\",\n      \"featured\": false,\n      \"avg_review\": 4477.623020167506,\n      \"total_reviews\": 4704\n    },\n    {\n      \"object\": \"string\",\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"slug\": \"string\",\n      \"featured\": false,\n      \"avg_review\": 8183.6215865988615,\n      \"total_reviews\": 7904\n    }\n  ],\n  \"meta\": {\n    \"include\": [\n      \"string\",\n      \"string\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2e96c3f4-a69f-4694-8a5b-1020e5909754",
+          "name": "List categories with SEO landing-page content",
+          "request": {
+            "name": "List categories with SEO landing-page content",
+            "description": {
+              "content": "Observed 200. A richer variant of `/v1/store/categories` that adds `seo_title`, `seo_meta_description`, `title`, `description` (HTML) and `parent_id` — the content behind the public category landing pages.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "categories"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4fa41bd2-715b-4b28-89e2-e3d7e4a92645",
+              "name": "Categories with landing-page copy.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "categories"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"object\": \"string\",\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"slug\": \"string\",\n      \"featured\": false,\n      \"avg_review\": 906.9226237326367,\n      \"total_reviews\": 3918,\n      \"parent_id\": \"string\",\n      \"seo_title\": \"string\",\n      \"seo_meta_description\": \"string\",\n      \"title\": \"string\",\n      \"description\": \"string\"\n    },\n    {\n      \"object\": \"string\",\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"slug\": \"string\",\n      \"featured\": true,\n      \"avg_review\": 9388.415966418956,\n      \"total_reviews\": 2928,\n      \"parent_id\": \"string\",\n      \"seo_title\": \"string\",\n      \"seo_meta_description\": \"string\",\n      \"title\": \"string\",\n      \"description\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "dec777f6-6465-4467-b4a5-714bc1a638c6",
+          "name": "Resolve a supplier's white-label subdomain",
+          "request": {
+            "name": "Resolve a supplier's white-label subdomain",
+            "description": {
+              "content": "Named by the storefront bundle. Probing a known supplier id returned 404, so it likely only resolves for suppliers who have a white-label subdomain configured.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "store",
+                "suppliers",
+                ":id",
+                "subdomain"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) Six-character konfetti resource id (e.g. `xyn62z`)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4767ab7d-e119-46a8-8b23-a8f9bd52d54a",
+              "name": "Subdomain configuration for the supplier.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "store",
+                    "suppliers",
+                    ":id",
+                    "subdomain"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Six-character konfetti resource id (e.g. `xyn62z`)."
+                    }
+                  ]
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "bac8a8a0-145c-40d0-ac88-8880b8c727f0",
+              "name": "Resource not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "store",
+                    "suppliers",
+                    ":id",
+                    "subdomain"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Six-character konfetti resource id (e.g. `xyn62z`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"errors\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "57849361-c2c3-4a0e-a89e-7f9f2b832b3c",
+          "name": "Record a storefront metric for a resource",
+          "request": {
+            "name": "Record a storefront metric for a resource",
+            "description": {
+              "content": "Named by the storefront bundle. Probing returned 422, so the path segments are validated against an enumeration that is not published.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "store",
+                "metrics",
+                ":resource",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "resource",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) Six-character konfetti resource id (e.g. `xyn62z`)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "883c3f7d-6e9b-4aeb-a112-ee57b01f94c4",
+              "name": "Metric recorded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "store",
+                    "metrics",
+                    ":resource",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "resource",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Six-character konfetti resource id (e.g. `xyn62z`)."
+                    }
+                  ]
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "71e6f8cf-1d60-4ab6-bf47-a6ef95db3b5e",
+              "name": "Request validation failed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "store",
+                    "metrics",
+                    ":resource",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "resource",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Six-character konfetti resource id (e.g. `xyn62z`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": 5820,\n  \"reason\": \"string\",\n  \"errors\": {\n    \"key_0\": [\n      \"string\",\n      \"string\"\n    ],\n    \"key_1\": [\n      \"string\",\n      \"string\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.gokonfetti.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "cbae829d-e62f-4ffc-969b-878135c55eb5",
+    "name": "konfetti Store account catalog API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "konfetti (Konfetti GmbH, Berlin) operates a marketplace for bookable experiences, courses and workshops in Germany and Austria. The storefront at gokonfetti.com is a Nuxt 3 application backed by a JSON API served from api.gokonfetti.com — an Apiato/Laravel service exposing a `/v1/store/*` catalog namespace (public, unauthenticated read), a `/v1/checkout/*` and `/v1/user/*` namespace (Bearer-token authenticated), and an OAuth 2.0 token endpoint at `/v1/oauth/token`.\nThis is an INTERNAL / UNDOCUMENTED API. konfetti does not market it as a public product, publishes no terms of use for it, and may change it without notice. Treat it as observational documentation, not a contract.\n\nContact Support:\n Name: konfetti (Konfetti GmbH)\n Email: hallo@gokonfetti.com",
+      "type": "text/plain"
+    }
+  }
+}

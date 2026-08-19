@@ -1,0 +1,90 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "konfetti Store account checkout API",
+    "version": "v1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "checkout",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Validate a coupon or voucher code against a cart",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.gokonfetti.com/v1/store/coupon/:code/validate",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "POST-only (GET returned 405). Returns `data.coupon` and `data.discount`. The storefront treats HTTP 403 as \"coupon no longer applies\" and clears local coupon state."
+        },
+        {
+          "info": {
+            "name": "Validate the current cart",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.gokonfetti.com/v1/checkout/cart/validate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "POST-only (GET returned 405). The storefront polls this every ten minutes while a cart is open to re-check availability and pricing."
+        },
+        {
+          "info": {
+            "name": "List the authenticated customer's orders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.gokonfetti.com/v1/checkout/orders",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "1-based page number."
+              },
+              {
+                "name": "orderBy",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`."
+              },
+              {
+                "name": "sortedBy",
+                "value": "",
+                "type": "query",
+                "description": "Sort direction applied to orderBy."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Requires a Bearer access token; unauthenticated GET redirected (302) to the login page. The storefront calls it with `?orderBy=created_at&sortedBy=desc&page=N`."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

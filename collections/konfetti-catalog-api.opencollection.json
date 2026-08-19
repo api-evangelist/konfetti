@@ -1,0 +1,287 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "konfetti Store account catalog API",
+    "version": "v1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "catalog",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List bookable experiences",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.gokonfetti.com/v1/store/events",
+            "params": [
+              {
+                "name": "include",
+                "value": "supplier,categories",
+                "type": "query",
+                "description": "Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "1-based page number."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Page size. Default 10 (observed)."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Alternative page-size parameter used by the storefront; `limit=-1` requests an unpaginated result."
+              },
+              {
+                "name": "search",
+                "value": "hasEvent:true;type:ONLINE;category:kochkurs",
+                "type": "query",
+                "description": "Semicolon-delimited `field:value` filter expression (l5-repository style). Observed fields: `supplier_id`, `hasEvent`, `type`, `category`."
+              },
+              {
+                "name": "searchFields",
+                "value": "",
+                "type": "query",
+                "description": "Comparison operator per search field, e.g. `supplier_id:!=` to negate."
+              },
+              {
+                "name": "orderBy",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`."
+              },
+              {
+                "name": "sortedBy",
+                "value": "",
+                "type": "query",
+                "description": "Sort direction applied to orderBy."
+              }
+            ]
+          },
+          "docs": "Paginated list of experience/event descriptions. Observed 200 with `meta.pagination.total` of 7,605 records on 2026-07-19."
+        },
+        {
+          "info": {
+            "name": "Retrieve one experience by permalink",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.gokonfetti.com/v1/store/events/:permalink",
+            "params": [
+              {
+                "name": "permalink",
+                "value": "",
+                "type": "path",
+                "description": "Slug-with-id permalink (e.g. `cocktailkurs-in-muenchen-0w1dlw`)."
+              },
+              {
+                "name": "include",
+                "value": "supplier,categories",
+                "type": "query",
+                "description": "Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`."
+              }
+            ]
+          },
+          "docs": "Observed 200 for a permalink such as `pasta-play-die-interaktive-kochbox-mit-erlebnisfaktor-xyn62z`; the bare six-character id returned 404, so the slug-with-id permalink is the lookup key."
+        },
+        {
+          "info": {
+            "name": "List experiences similar to a given one",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.gokonfetti.com/v1/store/events/:permalink/similar",
+            "params": [
+              {
+                "name": "permalink",
+                "value": "",
+                "type": "path",
+                "description": "Slug-with-id permalink (e.g. `cocktailkurs-in-muenchen-0w1dlw`)."
+              },
+              {
+                "name": "include",
+                "value": "supplier,categories",
+                "type": "query",
+                "description": "Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`."
+              },
+              {
+                "name": "search",
+                "value": "hasEvent:true;type:ONLINE;category:kochkurs",
+                "type": "query",
+                "description": "Semicolon-delimited `field:value` filter expression (l5-repository style). Observed fields: `supplier_id`, `hasEvent`, `type`, `category`."
+              },
+              {
+                "name": "searchFields",
+                "value": "",
+                "type": "query",
+                "description": "Comparison operator per search field, e.g. `supplier_id:!=` to negate."
+              },
+              {
+                "name": "orderBy",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`."
+              },
+              {
+                "name": "sortedBy",
+                "value": "",
+                "type": "query",
+                "description": "Sort direction applied to orderBy."
+              }
+            ]
+          },
+          "docs": "Observed 200. The storefront calls this with `orderBy=distance&sortedBy=asc&search=supplier_id:<id>;hasEvent:true&searchFields=supplier_id:!=`."
+        },
+        {
+          "info": {
+            "name": "Calculate pricing for a ticket selection",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.gokonfetti.com/v1/store/events/:id/pricings",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Six-character konfetti resource id (e.g. `xyn62z`)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "POST-only (GET returned 405 Method Not Allowed). Request body shape is taken verbatim from the storefront bundle. The storefront also sends an `Accept-Language` header to select locale/currency formatting."
+        },
+        {
+          "info": {
+            "name": "List purchasable add-ons for an experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.gokonfetti.com/v1/store/events/:id/add-ons",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Six-character konfetti resource id (e.g. `xyn62z`)."
+              }
+            ]
+          },
+          "docs": "Named by the storefront bundle as a GET. Probing it for an experience with no add-ons returned HTTP 500, so the endpoint exists but its empty-set behaviour is unstable; response schema not modelled."
+        },
+        {
+          "info": {
+            "name": "Retrieve the availability calendar for an experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.gokonfetti.com/v1/store/events/:id/calendar",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Six-character konfetti resource id (e.g. `xyn62z`)."
+              }
+            ]
+          },
+          "docs": "Named by the storefront bundle as a GET. Observed HTTP 500 for the probed experience; response schema not modelled."
+        },
+        {
+          "info": {
+            "name": "List experience categories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.gokonfetti.com/v1/store/categories",
+            "params": [
+              {
+                "name": "include",
+                "value": "supplier,categories",
+                "type": "query",
+                "description": "Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`."
+              }
+            ]
+          },
+          "docs": "Observed 200. Supports `include=thumbnail` per the response `meta.include`."
+        },
+        {
+          "info": {
+            "name": "List categories with SEO landing-page content",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.gokonfetti.com/v1/categories"
+          },
+          "docs": "Observed 200. A richer variant of `/v1/store/categories` that adds `seo_title`, `seo_meta_description`, `title`, `description` (HTML) and `parent_id` — the content behind the public category landing pages."
+        },
+        {
+          "info": {
+            "name": "Resolve a supplier's white-label subdomain",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.gokonfetti.com/v1/store/suppliers/:id/subdomain",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Six-character konfetti resource id (e.g. `xyn62z`)."
+              }
+            ]
+          },
+          "docs": "Named by the storefront bundle. Probing a known supplier id returned 404, so it likely only resolves for suppliers who have a white-label subdomain configured."
+        },
+        {
+          "info": {
+            "name": "Record a storefront metric for a resource",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.gokonfetti.com/v1/store/metrics/:resource/:id",
+            "params": [
+              {
+                "name": "resource",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Six-character konfetti resource id (e.g. `xyn62z`)."
+              }
+            ]
+          },
+          "docs": "Named by the storefront bundle. Probing returned 422, so the path segments are validated against an enumeration that is not published."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,111 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "konfetti Store account requests API",
+    "version": "v1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "requests",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Subscribe an email address to an experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.gokonfetti.com/v1/store/events/:id/subscribe",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Six-character konfetti resource id (e.g. `xyn62z`)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "POST-only (GET returned 405). Used for back-in-stock / new-date notification capture. Response carries a `data.sha256_email_address` hash the storefront forwards to its analytics layer."
+        },
+        {
+          "info": {
+            "name": "Request alternative dates for an experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.gokonfetti.com/v1/store/date-requests",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Lead capture for \"no date suits me\" enquiries. Body shape taken verbatim from the storefront bundle. GET redirected (302) to the API host login page."
+        },
+        {
+          "info": {
+            "name": "List experiences similar to a submitted date request",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.gokonfetti.com/v1/store/date-requests/:id/similar-events",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Six-character konfetti resource id (e.g. `xyn62z`)."
+              },
+              {
+                "name": "include",
+                "value": "supplier,categories",
+                "type": "query",
+                "description": "Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`."
+              }
+            ]
+          },
+          "docs": "List experiences similar to a submitted date request"
+        },
+        {
+          "info": {
+            "name": "Request a private / corporate team event",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.gokonfetti.com/v1/store/private-event-requests",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "POST-only (GET returned 405). Body shape taken verbatim from the storefront bundle."
+        },
+        {
+          "info": {
+            "name": "Subscribe an email address to the konfetti newsletter",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.gokonfetti.com/v1/store/customers/subscribe-newsletter",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Subscribe an email address to the konfetti newsletter"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
