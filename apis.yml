@@ -47,6 +47,18 @@ modified: '2026-07-19'
 tags:
 - Company
 - Marketplace
+- Experience
+- Booking
+- Event
+- Workshops
+- Ticketing
+- Gift Cards
+- Travel And Leisure
+- Germany
+- Commerce
+tags_raw:
+- Company
+- Marketplace
 - Experiences
 - Booking
 - Events
@@ -63,6 +75,8 @@ apis:
   humanURL: https://gokonfetti.com/de-de/partner/
   baseURL: https://api.gokonfetti.com/v1
   tags:
+  - Account
+  tags_raw:
   - account
   properties:
   - type: OpenAPI
@@ -81,6 +95,8 @@ apis:
   humanURL: https://gokonfetti.com/de-de/partner/
   baseURL: https://api.gokonfetti.com/v1
   tags:
+  - Authentication
+  tags_raw:
   - auth
   properties:
   - type: OpenAPI
@@ -99,6 +115,8 @@ apis:
   humanURL: https://gokonfetti.com/de-de/partner/
   baseURL: https://api.gokonfetti.com/v1
   tags:
+  - Catalog
+  tags_raw:
   - catalog
   properties:
   - type: OpenAPI
@@ -117,6 +135,8 @@ apis:
   humanURL: https://gokonfetti.com/de-de/partner/
   baseURL: https://api.gokonfetti.com/v1
   tags:
+  - Checkout
+  tags_raw:
   - checkout
   properties:
   - type: OpenAPI
@@ -135,6 +155,8 @@ apis:
   humanURL: https://gokonfetti.com/de-de/partner/
   baseURL: https://api.gokonfetti.com/v1
   tags:
+  - Requests
+  tags_raw:
   - requests
   properties:
   - type: OpenAPI
