@@ -65,7 +65,7 @@ tags:
 - Workshops
 - Ticketing
 - Gift Cards
-- Travel And Leisure
+- Travel and Leisure
 - Germany
 - Commerce
 tags_raw:
@@ -147,7 +147,7 @@ apis:
   humanURL: https://gokonfetti.com/de-de/partner/
   baseURL: https://api.gokonfetti.com/v1
   tags:
-  - Checkout
+  - checkout
   tags_raw:
   - checkout
   properties:
