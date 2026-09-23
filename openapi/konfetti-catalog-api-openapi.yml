@@ -1,13 +1,11 @@
 openapi: 3.2.0
 info:
-  title: konfetti Store account Catalog API
+  title: konfetti Store Catalog API
   version: v1
   x-generated: '2026-07-19'
   x-method: derived
   x-source: Derived by API Evangelist from direct observation of the live konfetti API at https://api.gokonfetti.com/v1 (every path and status code below was probed on 2026-07-19) plus the publicly served gokonfetti.com Nuxt application bundles under /_nuxt3/*.js, which name the endpoints, request bodies and query conventions the storefront uses. konfetti publishes no developer portal, no OpenAPI document and no API reference; this description is an honest reconstruction of the observable surface, not a provider-published specification. Nothing here is invented — schemas are modelled only from responses actually returned.
-  description: 'konfetti (Konfetti GmbH, Berlin) operates a marketplace for bookable experiences, courses and workshops in Germany and Austria. The storefront at gokonfetti.com is a Nuxt 3 application backed by a JSON API served from api.gokonfetti.com — an Apiato/Laravel service exposing a `/v1/store/*` catalog namespace (public, unauthenticated read), a `/v1/checkout/*` and `/v1/user/*` namespace (Bearer-token authenticated), and an OAuth 2.0 token endpoint at `/v1/oauth/token`.
-
-    This is an INTERNAL / UNDOCUMENTED API. konfetti does not market it as a public product, publishes no terms of use for it, and may change it without notice. Treat it as observational documentation, not a contract.'
+  description: konfetti (Konfetti GmbH, Berlin) operates a marketplace for bookable experiences, courses and workshops in Germany and Austria.
   contact:
     name: konfetti (Konfetti GmbH)
     email: hallo@gokonfetti.com
@@ -18,7 +16,7 @@ servers:
 - url: https://api.gokonfetti.com
   description: Production API host (observed HTTP 200, HTTP/2, Apiato/Laravel)
 tags:
-- name: catalog
+- name: Catalog
   description: Public read access to experiences and categories.
 paths:
   /v1/store/events:
@@ -27,7 +25,7 @@ paths:
       summary: List bookable experiences
       description: Paginated list of experience/event descriptions. Observed 200 with `meta.pagination.total` of 7,605 records on 2026-07-19.
       tags:
-      - catalog
+      - Catalog
       parameters:
       - $ref: '#/components/parameters/include'
       - $ref: '#/components/parameters/page'
@@ -57,7 +55,7 @@ paths:
       summary: Retrieve one experience by permalink
       description: Observed 200 for a permalink such as `pasta-play-die-interaktive-kochbox-mit-erlebnisfaktor-xyn62z`; the bare six-character id returned 404, so the slug-with-id permalink is the lookup key.
       tags:
-      - catalog
+      - Catalog
       parameters:
       - $ref: '#/components/parameters/permalink'
       - $ref: '#/components/parameters/include'
@@ -77,9 +75,9 @@ paths:
     get:
       operationId: listSimilarEvents
       summary: List experiences similar to a given one
-      description: Observed 200. The storefront calls this with `orderBy=distance&sortedBy=asc&search=supplier_id:<id>;hasEvent:true&searchFields=supplier_id:!=`.
+      description: Observed 200. The storefront calls this with `orderBy=distance&sortedBy=asc&search=supplier_id:;hasEvent:true&searchFields=supplier_id:!=`.
       tags:
-      - catalog
+      - Catalog
       parameters:
       - $ref: '#/components/parameters/permalink'
       - $ref: '#/components/parameters/include'
@@ -107,7 +105,7 @@ paths:
       summary: Calculate pricing for a ticket selection
       description: POST-only (GET returned 405 Method Not Allowed). Request body shape is taken verbatim from the storefront bundle. The storefront also sends an `Accept-Language` header to select locale/currency formatting.
       tags:
-      - catalog
+      - Catalog
       parameters:
       - $ref: '#/components/parameters/id'
       requestBody:
@@ -150,7 +148,7 @@ paths:
       summary: List purchasable add-ons for an experience
       description: Named by the storefront bundle as a GET. Probing it for an experience with no add-ons returned HTTP 500, so the endpoint exists but its empty-set behaviour is unstable; response schema not modelled.
       tags:
-      - catalog
+      - Catalog
       parameters:
       - $ref: '#/components/parameters/id'
       responses:
@@ -164,7 +162,7 @@ paths:
       summary: Retrieve the availability calendar for an experience
       description: Named by the storefront bundle as a GET. Observed HTTP 500 for the probed experience; response schema not modelled.
       tags:
-      - catalog
+      - Catalog
       parameters:
       - $ref: '#/components/parameters/id'
       responses:
@@ -178,7 +176,7 @@ paths:
       summary: List experience categories
       description: Observed 200. Supports `include=thumbnail` per the response `meta.include`.
       tags:
-      - catalog
+      - Catalog
       parameters:
       - $ref: '#/components/parameters/include'
       responses:
@@ -209,7 +207,7 @@ paths:
       summary: List categories with SEO landing-page content
       description: Observed 200. A richer variant of `/v1/store/categories` that adds `seo_title`, `seo_meta_description`, `title`, `description` (HTML) and `parent_id` — the content behind the public category landing pages.
       tags:
-      - catalog
+      - Catalog
       responses:
         '200':
           description: Categories with landing-page copy.
@@ -228,7 +226,7 @@ paths:
       summary: Resolve a supplier's white-label subdomain
       description: Named by the storefront bundle. Probing a known supplier id returned 404, so it likely only resolves for suppliers who have a white-label subdomain configured.
       tags:
-      - catalog
+      - Catalog
       parameters:
       - $ref: '#/components/parameters/id'
       responses:
@@ -242,7 +240,7 @@ paths:
       summary: Record a storefront metric for a resource
       description: Named by the storefront bundle. Probing returned 422, so the path segments are validated against an enumeration that is not published.
       tags:
-      - catalog
+      - Catalog
       parameters:
       - name: resource
         in: path
@@ -275,6 +273,24 @@ components:
         description:
           type: string
           description: HTML body.
+    ValidationError:
+      type: object
+      description: The 422 validation envelope, observed verbatim from POST /v1/register.
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          const: 422
+        reason:
+          type: string
+          const: requestValidation
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
     Money:
       type: object
       description: Monetary amount in minor units plus a locale-formatted string.
@@ -306,6 +322,48 @@ components:
           description:
             type: string
             description: HTML landing-page copy.
+    Photo:
+      type: object
+      properties:
+        id:
+          type: integer
+        filename:
+          type: string
+        thumb:
+          type: string
+          format: uri
+        cropped:
+          type: string
+          format: uri
+        dimensions:
+          type: object
+          properties:
+            width:
+              type: number
+            height:
+              type: number
+        alt:
+          type: string
+    Category:
+      type: object
+      properties:
+        object:
+          type: string
+          const: Category
+        id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        featured:
+          type: boolean
+        avg_review:
+          type:
+          - number
+          - string
+        total_reviews:
+          type: integer
     Event:
       type: object
       description: 'An experience description (`object: EventMetaData`) — the sellable product, distinct from its scheduled instances.'
@@ -448,59 +506,16 @@ components:
                   type: number
                 totalRating:
                   type: integer
-    Category:
+    Error:
       type: object
+      description: 'The generic Apiato error envelope. Observed verbatim on a 404: `{"message":"The requested Resource was not found.","errors":[]}`.'
       properties:
-        object:
+        message:
           type: string
-          const: Category
-        id:
-          type: string
-        name:
-          type: string
-        slug:
-          type: string
-        featured:
-          type: boolean
-        avg_review:
+        errors:
           type:
-          - number
-          - string
-        total_reviews:
-          type: integer
-    ListMeta:
-      type: object
-      properties:
-        include:
-          type: array
-          description: Relations this endpoint accepts in `include`.
-          items:
-            type: string
-        custom:
-          type: array
-          items: {}
-        pagination:
-          type: object
-          properties:
-            total:
-              type: integer
-            count:
-              type: integer
-            per_page:
-              type: integer
-            current_page:
-              type: integer
-            total_pages:
-              type: integer
-            links:
-              type: object
-              properties:
-                previous:
-                  type: string
-                  format: uri
-                next:
-                  type: string
-                  format: uri
+          - array
+          - object
     Instance:
       type: object
       description: A single scheduled occurrence (date) of an experience.
@@ -535,74 +550,46 @@ components:
           format: date-time
         all_day:
           type: boolean
-    Photo:
+    ListMeta:
       type: object
       properties:
-        id:
-          type: integer
-        filename:
-          type: string
-        thumb:
-          type: string
-          format: uri
-        cropped:
-          type: string
-          format: uri
-        dimensions:
+        include:
+          type: array
+          description: Relations this endpoint accepts in `include`.
+          items:
+            type: string
+        custom:
+          type: array
+          items: {}
+        pagination:
           type: object
           properties:
-            width:
-              type: number
-            height:
-              type: number
-        alt:
-          type: string
-    Error:
-      type: object
-      description: 'The generic Apiato error envelope. Observed verbatim on a 404: `{"message":"The requested Resource was not found.","errors":[]}`.'
-      properties:
-        message:
-          type: string
-        errors:
-          type:
-          - array
-          - object
-    ValidationError:
-      type: object
-      description: The 422 validation envelope, observed verbatim from POST /v1/register.
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          const: 422
-        reason:
-          type: string
-          const: requestValidation
-        errors:
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              type: string
-  responses:
-    ServerError:
-      description: Server error.
-    ValidationError:
-      description: Request validation failed.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ValidationError'
-    MethodNotAllowed:
-      description: HTTP method not allowed for this path.
-    NotFound:
-      description: Resource not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+            total:
+              type: integer
+            count:
+              type: integer
+            per_page:
+              type: integer
+            current_page:
+              type: integer
+            total_pages:
+              type: integer
+            links:
+              type: object
+              properties:
+                previous:
+                  type: string
+                  format: uri
+                next:
+                  type: string
+                  format: uri
   parameters:
+    limit:
+      name: limit
+      in: query
+      description: Alternative page-size parameter used by the storefront; `limit=-1` requests an unpaginated result.
+      schema:
+        type: integer
     permalink:
       name: permalink
       in: path
@@ -610,12 +597,47 @@ components:
       description: Slug-with-id permalink (e.g. `cocktailkurs-in-muenchen-0w1dlw`).
       schema:
         type: string
-    limit:
-      name: limit
+    page:
+      name: page
       in: query
-      description: Alternative page-size parameter used by the storefront; `limit=-1` requests an unpaginated result.
+      description: 1-based page number.
       schema:
         type: integer
+        minimum: 1
+        default: 1
+    search:
+      name: search
+      in: query
+      description: 'Semicolon-delimited `field:value` filter expression (l5-repository style). Observed fields: `supplier_id`, `hasEvent`, `type`, `category`.'
+      schema:
+        type: string
+      example: hasEvent:true;type:ONLINE;category:kochkurs
+    perPage:
+      name: per_page
+      in: query
+      description: Page size. Default 10 (observed).
+      schema:
+        type: integer
+        default: 10
+    orderBy:
+      name: orderBy
+      in: query
+      description: 'Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`.'
+      schema:
+        type: string
+    include:
+      name: include
+      in: query
+      description: 'Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`.'
+      schema:
+        type: string
+      example: supplier,categories
+    searchFields:
+      name: searchFields
+      in: query
+      description: Comparison operator per search field, e.g. `supplier_id:!=` to negate.
+      schema:
+        type: string
     sortedBy:
       name: sortedBy
       in: query
@@ -632,47 +654,23 @@ components:
       description: Six-character konfetti resource id (e.g. `xyn62z`).
       schema:
         type: string
-    perPage:
-      name: per_page
-      in: query
-      description: Page size. Default 10 (observed).
-      schema:
-        type: integer
-        default: 10
-    search:
-      name: search
-      in: query
-      description: 'Semicolon-delimited `field:value` filter expression (l5-repository style). Observed fields: `supplier_id`, `hasEvent`, `type`, `category`.'
-      schema:
-        type: string
-      example: hasEvent:true;type:ONLINE;category:kochkurs
-    page:
-      name: page
-      in: query
-      description: 1-based page number.
-      schema:
-        type: integer
-        minimum: 1
-        default: 1
-    include:
-      name: include
-      in: query
-      description: 'Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`.'
-      schema:
-        type: string
-      example: supplier,categories
-    orderBy:
-      name: orderBy
-      in: query
-      description: 'Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`.'
-      schema:
-        type: string
-    searchFields:
-      name: searchFields
-      in: query
-      description: Comparison operator per search field, e.g. `supplier_id:!=` to negate.
-      schema:
-        type: string
+  responses:
+    ServerError:
+      description: Server error.
+    MethodNotAllowed:
+      description: HTTP method not allowed for this path.
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ValidationError:
+      description: Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
   securitySchemes:
     bearerAuth:
       type: http

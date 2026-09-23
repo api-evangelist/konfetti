@@ -1,11 +1,7 @@
 {
   "provider": "konfetti",
   "sources": [
-    "konfetti-account-api-openapi.yml",
-    "konfetti-auth-api-openapi.yml",
-    "konfetti-catalog-api-openapi.yml",
-    "konfetti-checkout-api-openapi.yml",
-    "konfetti-requests-api-openapi.yml"
+    "_ae-authored/konfetti-store-openapi.yml"
   ],
   "outputs": [
     "konfetti-account-api-openapi.yml",
@@ -18,12 +14,15 @@
   "errors": [],
   "warnings": [],
   "notes": [
-    "konfetti-account-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "konfetti-auth-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "konfetti-catalog-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "konfetti-checkout-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "konfetti-requests-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "sourced from openapi/_original/ (0 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "konfetti-store-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
     "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "konfetti-account-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "konfetti-auth-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "konfetti-catalog-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "konfetti-checkout-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "konfetti-requests-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

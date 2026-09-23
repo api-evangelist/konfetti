@@ -1,13 +1,11 @@
 openapi: 3.2.0
 info:
-  title: konfetti Store account Checkout API
+  title: konfetti Store Checkout API
   version: v1
   x-generated: '2026-07-19'
   x-method: derived
   x-source: Derived by API Evangelist from direct observation of the live konfetti API at https://api.gokonfetti.com/v1 (every path and status code below was probed on 2026-07-19) plus the publicly served gokonfetti.com Nuxt application bundles under /_nuxt3/*.js, which name the endpoints, request bodies and query conventions the storefront uses. konfetti publishes no developer portal, no OpenAPI document and no API reference; this description is an honest reconstruction of the observable surface, not a provider-published specification. Nothing here is invented — schemas are modelled only from responses actually returned.
-  description: 'konfetti (Konfetti GmbH, Berlin) operates a marketplace for bookable experiences, courses and workshops in Germany and Austria. The storefront at gokonfetti.com is a Nuxt 3 application backed by a JSON API served from api.gokonfetti.com — an Apiato/Laravel service exposing a `/v1/store/*` catalog namespace (public, unauthenticated read), a `/v1/checkout/*` and `/v1/user/*` namespace (Bearer-token authenticated), and an OAuth 2.0 token endpoint at `/v1/oauth/token`.
-
-    This is an INTERNAL / UNDOCUMENTED API. konfetti does not market it as a public product, publishes no terms of use for it, and may change it without notice. Treat it as observational documentation, not a contract.'
+  description: konfetti (Konfetti GmbH, Berlin) operates a marketplace for bookable experiences, courses and workshops in Germany and Austria.
   contact:
     name: konfetti (Konfetti GmbH)
     email: hallo@gokonfetti.com
@@ -18,7 +16,7 @@ servers:
 - url: https://api.gokonfetti.com
   description: Production API host (observed HTTP 200, HTTP/2, Apiato/Laravel)
 tags:
-- name: checkout
+- name: Checkout
   description: Cart validation, coupons and orders.
 paths:
   /v1/store/coupon/{code}/validate:
@@ -27,7 +25,7 @@ paths:
       summary: Validate a coupon or voucher code against a cart
       description: POST-only (GET returned 405). Returns `data.coupon` and `data.discount`. The storefront treats HTTP 403 as "coupon no longer applies" and clears local coupon state.
       tags:
-      - checkout
+      - Checkout
       parameters:
       - name: code
         in: path
@@ -68,7 +66,7 @@ paths:
       summary: Validate the current cart
       description: POST-only (GET returned 405). The storefront polls this every ten minutes while a cart is open to re-check availability and pricing.
       tags:
-      - checkout
+      - Checkout
       requestBody:
         content:
           application/json:
@@ -100,7 +98,7 @@ paths:
       summary: List the authenticated customer's orders
       description: Requires a Bearer access token; unauthenticated GET redirected (302) to the login page. The storefront calls it with `?orderBy=created_at&sortedBy=desc&page=N`.
       tags:
-      - checkout
+      - Checkout
       security:
       - bearerAuth: []
       parameters:
@@ -114,6 +112,12 @@ paths:
           description: Redirect to login when unauthenticated.
 components:
   parameters:
+    orderBy:
+      name: orderBy
+      in: query
+      description: 'Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`.'
+      schema:
+        type: string
     page:
       name: page
       in: query
@@ -131,12 +135,6 @@ components:
         enum:
         - asc
         - desc
-    orderBy:
-      name: orderBy
-      in: query
-      description: 'Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`.'
-      schema:
-        type: string
   responses:
     MethodNotAllowed:
       description: HTTP method not allowed for this path.
