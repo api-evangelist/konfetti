@@ -82,7 +82,7 @@ tags_raw:
 - Commerce
 apis:
 - aid: konfetti:konfetti-account-api
-  name: konfetti account API
+  name: konfetti Account API
   description: Authenticated customer profile and registration.
   humanURL: https://gokonfetti.com/de-de/partner/
   baseURL: https://api.gokonfetti.com/v1
@@ -102,7 +102,7 @@ apis:
   - type: DataModel
     url: data-model/konfetti-data-model.yml
 - aid: konfetti:konfetti-auth-api
-  name: konfetti auth API
+  name: konfetti Auth API
   description: OAuth 2.0 token issuance.
   humanURL: https://gokonfetti.com/de-de/partner/
   baseURL: https://api.gokonfetti.com/v1
@@ -122,7 +122,7 @@ apis:
   - type: DataModel
     url: data-model/konfetti-data-model.yml
 - aid: konfetti:konfetti-catalog-api
-  name: konfetti catalog API
+  name: konfetti Catalog API
   description: Public read access to experiences and categories.
   humanURL: https://gokonfetti.com/de-de/partner/
   baseURL: https://api.gokonfetti.com/v1
@@ -142,7 +142,7 @@ apis:
   - type: DataModel
     url: data-model/konfetti-data-model.yml
 - aid: konfetti:konfetti-checkout-api
-  name: konfetti checkout API
+  name: konfetti Checkout API
   description: Cart validation, coupons and orders.
   humanURL: https://gokonfetti.com/de-de/partner/
   baseURL: https://api.gokonfetti.com/v1
@@ -162,7 +162,7 @@ apis:
   - type: DataModel
     url: data-model/konfetti-data-model.yml
 - aid: konfetti:konfetti-requests-api
-  name: konfetti requests API
+  name: konfetti Requests API
   description: Lead-capture endpoints for date and private-event requests.
   humanURL: https://gokonfetti.com/de-de/partner/
   baseURL: https://api.gokonfetti.com/v1

@@ -254,58 +254,78 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
 components:
+  parameters:
+    include:
+      name: include
+      in: query
+      description: 'Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`.'
+      schema:
+        type: string
+      example: supplier,categories
+    orderBy:
+      name: orderBy
+      in: query
+      description: 'Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`.'
+      schema:
+        type: string
+    id:
+      name: id
+      in: path
+      required: true
+      description: Six-character konfetti resource id (e.g. `xyn62z`).
+      schema:
+        type: string
+    perPage:
+      name: per_page
+      in: query
+      description: Page size. Default 10 (observed).
+      schema:
+        type: integer
+        default: 10
+    page:
+      name: page
+      in: query
+      description: 1-based page number.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    sortedBy:
+      name: sortedBy
+      in: query
+      description: Sort direction applied to orderBy.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+    limit:
+      name: limit
+      in: query
+      description: Alternative page-size parameter used by the storefront; `limit=-1` requests an unpaginated result.
+      schema:
+        type: integer
+    permalink:
+      name: permalink
+      in: path
+      required: true
+      description: Slug-with-id permalink (e.g. `cocktailkurs-in-muenchen-0w1dlw`).
+      schema:
+        type: string
+    search:
+      name: search
+      in: query
+      description: 'Semicolon-delimited `field:value` filter expression (l5-repository style). Observed fields: `supplier_id`, `hasEvent`, `type`, `category`.'
+      schema:
+        type: string
+      example: hasEvent:true;type:ONLINE;category:kochkurs
+    searchFields:
+      name: searchFields
+      in: query
+      description: Comparison operator per search field, e.g. `supplier_id:!=` to negate.
+      schema:
+        type: string
   schemas:
-    Supplier:
-      type: object
-      description: The partner/host that runs an experience.
-      properties:
-        object:
-          type: string
-          const: Supplier
-        id:
-          type: string
-        name:
-          type: string
-        page_title:
-          type: string
-        permalink:
-          type: string
-        description:
-          type: string
-          description: HTML body.
-    ValidationError:
-      type: object
-      description: The 422 validation envelope, observed verbatim from POST /v1/register.
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          const: 422
-        reason:
-          type: string
-          const: requestValidation
-        errors:
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              type: string
-    Money:
-      type: object
-      description: Monetary amount in minor units plus a locale-formatted string.
-      properties:
-        amount:
-          type: string
-          description: Minor units (cents), as a string.
-        currency:
-          type: string
-          examples:
-          - EUR
-        formatted:
-          type: string
-          examples:
-          - 29,00 €
     CategoryPage:
       allOf:
       - $ref: '#/components/schemas/Category'
@@ -322,48 +342,39 @@ components:
           description:
             type: string
             description: HTML landing-page copy.
-    Photo:
+    ListMeta:
       type: object
       properties:
-        id:
-          type: integer
-        filename:
-          type: string
-        thumb:
-          type: string
-          format: uri
-        cropped:
-          type: string
-          format: uri
-        dimensions:
+        include:
+          type: array
+          description: Relations this endpoint accepts in `include`.
+          items:
+            type: string
+        custom:
+          type: array
+          items: {}
+        pagination:
           type: object
           properties:
-            width:
-              type: number
-            height:
-              type: number
-        alt:
-          type: string
-    Category:
-      type: object
-      properties:
-        object:
-          type: string
-          const: Category
-        id:
-          type: string
-        name:
-          type: string
-        slug:
-          type: string
-        featured:
-          type: boolean
-        avg_review:
-          type:
-          - number
-          - string
-        total_reviews:
-          type: integer
+            total:
+              type: integer
+            count:
+              type: integer
+            per_page:
+              type: integer
+            current_page:
+              type: integer
+            total_pages:
+              type: integer
+            links:
+              type: object
+              properties:
+                previous:
+                  type: string
+                  format: uri
+                next:
+                  type: string
+                  format: uri
     Event:
       type: object
       description: 'An experience description (`object: EventMetaData`) — the sellable product, distinct from its scheduled instances.'
@@ -516,6 +527,66 @@ components:
           type:
           - array
           - object
+    Category:
+      type: object
+      properties:
+        object:
+          type: string
+          const: Category
+        id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        featured:
+          type: boolean
+        avg_review:
+          type:
+          - number
+          - string
+        total_reviews:
+          type: integer
+    Photo:
+      type: object
+      properties:
+        id:
+          type: integer
+        filename:
+          type: string
+        thumb:
+          type: string
+          format: uri
+        cropped:
+          type: string
+          format: uri
+        dimensions:
+          type: object
+          properties:
+            width:
+              type: number
+            height:
+              type: number
+        alt:
+          type: string
+    ValidationError:
+      type: object
+      description: The 422 validation envelope, observed verbatim from POST /v1/register.
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          const: 422
+        reason:
+          type: string
+          const: requestValidation
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
     Instance:
       type: object
       description: A single scheduled occurrence (date) of an experience.
@@ -550,121 +621,50 @@ components:
           format: date-time
         all_day:
           type: boolean
-    ListMeta:
+    Money:
       type: object
+      description: Monetary amount in minor units plus a locale-formatted string.
       properties:
-        include:
-          type: array
-          description: Relations this endpoint accepts in `include`.
-          items:
-            type: string
-        custom:
-          type: array
-          items: {}
-        pagination:
-          type: object
-          properties:
-            total:
-              type: integer
-            count:
-              type: integer
-            per_page:
-              type: integer
-            current_page:
-              type: integer
-            total_pages:
-              type: integer
-            links:
-              type: object
-              properties:
-                previous:
-                  type: string
-                  format: uri
-                next:
-                  type: string
-                  format: uri
-  parameters:
-    limit:
-      name: limit
-      in: query
-      description: Alternative page-size parameter used by the storefront; `limit=-1` requests an unpaginated result.
-      schema:
-        type: integer
-    permalink:
-      name: permalink
-      in: path
-      required: true
-      description: Slug-with-id permalink (e.g. `cocktailkurs-in-muenchen-0w1dlw`).
-      schema:
-        type: string
-    page:
-      name: page
-      in: query
-      description: 1-based page number.
-      schema:
-        type: integer
-        minimum: 1
-        default: 1
-    search:
-      name: search
-      in: query
-      description: 'Semicolon-delimited `field:value` filter expression (l5-repository style). Observed fields: `supplier_id`, `hasEvent`, `type`, `category`.'
-      schema:
-        type: string
-      example: hasEvent:true;type:ONLINE;category:kochkurs
-    perPage:
-      name: per_page
-      in: query
-      description: Page size. Default 10 (observed).
-      schema:
-        type: integer
-        default: 10
-    orderBy:
-      name: orderBy
-      in: query
-      description: 'Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`.'
-      schema:
-        type: string
-    include:
-      name: include
-      in: query
-      description: 'Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`.'
-      schema:
-        type: string
-      example: supplier,categories
-    searchFields:
-      name: searchFields
-      in: query
-      description: Comparison operator per search field, e.g. `supplier_id:!=` to negate.
-      schema:
-        type: string
-    sortedBy:
-      name: sortedBy
-      in: query
-      description: Sort direction applied to orderBy.
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
-    id:
-      name: id
-      in: path
-      required: true
-      description: Six-character konfetti resource id (e.g. `xyn62z`).
-      schema:
-        type: string
+        amount:
+          type: string
+          description: Minor units (cents), as a string.
+        currency:
+          type: string
+          examples:
+          - EUR
+        formatted:
+          type: string
+          examples:
+          - 29,00 €
+    Supplier:
+      type: object
+      description: The partner/host that runs an experience.
+      properties:
+        object:
+          type: string
+          const: Supplier
+        id:
+          type: string
+        name:
+          type: string
+        page_title:
+          type: string
+        permalink:
+          type: string
+        description:
+          type: string
+          description: HTML body.
   responses:
     ServerError:
       description: Server error.
-    MethodNotAllowed:
-      description: HTTP method not allowed for this path.
     NotFound:
       description: Resource not found.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    MethodNotAllowed:
+      description: HTTP method not allowed for this path.
     ValidationError:
       description: Request validation failed.
       content:
