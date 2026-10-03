@@ -111,6 +111,9 @@ paths:
         '302':
           description: Redirect to login when unauthenticated.
 components:
+  responses:
+    MethodNotAllowed:
+      description: HTTP method not allowed for this path.
   parameters:
     orderBy:
       name: orderBy
@@ -135,9 +138,6 @@ components:
         enum:
         - asc
         - desc
-  responses:
-    MethodNotAllowed:
-      description: HTTP method not allowed for this path.
   securitySchemes:
     bearerAuth:
       type: http

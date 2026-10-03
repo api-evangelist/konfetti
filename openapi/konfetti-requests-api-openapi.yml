@@ -165,14 +165,10 @@ paths:
         '200':
           description: Newsletter subscription recorded.
 components:
+  responses:
+    MethodNotAllowed:
+      description: HTTP method not allowed for this path.
   parameters:
-    include:
-      name: include
-      in: query
-      description: 'Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`.'
-      schema:
-        type: string
-      example: supplier,categories
     id:
       name: id
       in: path
@@ -180,9 +176,13 @@ components:
       description: Six-character konfetti resource id (e.g. `xyn62z`).
       schema:
         type: string
-  responses:
-    MethodNotAllowed:
-      description: HTTP method not allowed for this path.
+    include:
+      name: include
+      in: query
+      description: 'Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`.'
+      schema:
+        type: string
+      example: supplier,categories
   securitySchemes:
     bearerAuth:
       type: http

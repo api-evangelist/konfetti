@@ -255,33 +255,6 @@ paths:
           $ref: '#/components/responses/ValidationError'
 components:
   parameters:
-    include:
-      name: include
-      in: query
-      description: 'Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`.'
-      schema:
-        type: string
-      example: supplier,categories
-    orderBy:
-      name: orderBy
-      in: query
-      description: 'Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`.'
-      schema:
-        type: string
-    id:
-      name: id
-      in: path
-      required: true
-      description: Six-character konfetti resource id (e.g. `xyn62z`).
-      schema:
-        type: string
-    perPage:
-      name: per_page
-      in: query
-      description: Page size. Default 10 (observed).
-      schema:
-        type: integer
-        default: 10
     page:
       name: page
       in: query
@@ -290,26 +263,23 @@ components:
         type: integer
         minimum: 1
         default: 1
-    sortedBy:
-      name: sortedBy
-      in: query
-      description: Sort direction applied to orderBy.
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
     limit:
       name: limit
       in: query
       description: Alternative page-size parameter used by the storefront; `limit=-1` requests an unpaginated result.
       schema:
         type: integer
-    permalink:
-      name: permalink
+    id:
+      name: id
       in: path
       required: true
-      description: Slug-with-id permalink (e.g. `cocktailkurs-in-muenchen-0w1dlw`).
+      description: Six-character konfetti resource id (e.g. `xyn62z`).
+      schema:
+        type: string
+    orderBy:
+      name: orderBy
+      in: query
+      description: 'Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`.'
       schema:
         type: string
     search:
@@ -319,62 +289,71 @@ components:
       schema:
         type: string
       example: hasEvent:true;type:ONLINE;category:kochkurs
+    permalink:
+      name: permalink
+      in: path
+      required: true
+      description: Slug-with-id permalink (e.g. `cocktailkurs-in-muenchen-0w1dlw`).
+      schema:
+        type: string
+    sortedBy:
+      name: sortedBy
+      in: query
+      description: Sort direction applied to orderBy.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
     searchFields:
       name: searchFields
       in: query
       description: Comparison operator per search field, e.g. `supplier_id:!=` to negate.
       schema:
         type: string
+    include:
+      name: include
+      in: query
+      description: 'Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`.'
+      schema:
+        type: string
+      example: supplier,categories
+    perPage:
+      name: per_page
+      in: query
+      description: Page size. Default 10 (observed).
+      schema:
+        type: integer
+        default: 10
   schemas:
-    CategoryPage:
-      allOf:
-      - $ref: '#/components/schemas/Category'
-      - type: object
-        properties:
-          parent_id:
-            type: string
-          seo_title:
-            type: string
-          seo_meta_description:
-            type: string
-          title:
-            type: string
-          description:
-            type: string
-            description: HTML landing-page copy.
-    ListMeta:
+    Error:
       type: object
+      description: 'The generic Apiato error envelope. Observed verbatim on a 404: `{"message":"The requested Resource was not found.","errors":[]}`.'
       properties:
-        include:
-          type: array
-          description: Relations this endpoint accepts in `include`.
-          items:
-            type: string
-        custom:
-          type: array
-          items: {}
-        pagination:
+        message:
+          type: string
+        errors:
+          type:
+          - array
+          - object
+    ValidationError:
+      type: object
+      description: The 422 validation envelope, observed verbatim from POST /v1/register.
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          const: 422
+        reason:
+          type: string
+          const: requestValidation
+        errors:
           type: object
-          properties:
-            total:
-              type: integer
-            count:
-              type: integer
-            per_page:
-              type: integer
-            current_page:
-              type: integer
-            total_pages:
-              type: integer
-            links:
-              type: object
-              properties:
-                previous:
-                  type: string
-                  format: uri
-                next:
-                  type: string
-                  format: uri
+          additionalProperties:
+            type: array
+            items:
+              type: string
     Event:
       type: object
       description: 'An experience description (`object: EventMetaData`) — the sellable product, distinct from its scheduled instances.'
@@ -517,36 +496,24 @@ components:
                   type: number
                 totalRating:
                   type: integer
-    Error:
+    Supplier:
       type: object
-      description: 'The generic Apiato error envelope. Observed verbatim on a 404: `{"message":"The requested Resource was not found.","errors":[]}`.'
-      properties:
-        message:
-          type: string
-        errors:
-          type:
-          - array
-          - object
-    Category:
-      type: object
+      description: The partner/host that runs an experience.
       properties:
         object:
           type: string
-          const: Category
+          const: Supplier
         id:
           type: string
         name:
           type: string
-        slug:
+        page_title:
           type: string
-        featured:
-          type: boolean
-        avg_review:
-          type:
-          - number
-          - string
-        total_reviews:
-          type: integer
+        permalink:
+          type: string
+        description:
+          type: string
+          description: HTML body.
     Photo:
       type: object
       properties:
@@ -569,24 +536,42 @@ components:
               type: number
         alt:
           type: string
-    ValidationError:
+    Category:
       type: object
-      description: The 422 validation envelope, observed verbatim from POST /v1/register.
       properties:
-        message:
+        object:
           type: string
-        code:
+          const: Category
+        id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        featured:
+          type: boolean
+        avg_review:
+          type:
+          - number
+          - string
+        total_reviews:
           type: integer
-          const: 422
-        reason:
-          type: string
-          const: requestValidation
-        errors:
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              type: string
+    CategoryPage:
+      allOf:
+      - $ref: '#/components/schemas/Category'
+      - type: object
+        properties:
+          parent_id:
+            type: string
+          seo_title:
+            type: string
+          seo_meta_description:
+            type: string
+          title:
+            type: string
+          description:
+            type: string
+            description: HTML landing-page copy.
     Instance:
       type: object
       description: A single scheduled occurrence (date) of an experience.
@@ -621,6 +606,39 @@ components:
           format: date-time
         all_day:
           type: boolean
+    ListMeta:
+      type: object
+      properties:
+        include:
+          type: array
+          description: Relations this endpoint accepts in `include`.
+          items:
+            type: string
+        custom:
+          type: array
+          items: {}
+        pagination:
+          type: object
+          properties:
+            total:
+              type: integer
+            count:
+              type: integer
+            per_page:
+              type: integer
+            current_page:
+              type: integer
+            total_pages:
+              type: integer
+            links:
+              type: object
+              properties:
+                previous:
+                  type: string
+                  format: uri
+                next:
+                  type: string
+                  format: uri
     Money:
       type: object
       description: Monetary amount in minor units plus a locale-formatted string.
@@ -636,24 +654,6 @@ components:
           type: string
           examples:
           - 29,00 €
-    Supplier:
-      type: object
-      description: The partner/host that runs an experience.
-      properties:
-        object:
-          type: string
-          const: Supplier
-        id:
-          type: string
-        name:
-          type: string
-        page_title:
-          type: string
-        permalink:
-          type: string
-        description:
-          type: string
-          description: HTML body.
   responses:
     ServerError:
       description: Server error.
@@ -663,14 +663,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    MethodNotAllowed:
-      description: HTTP method not allowed for this path.
     ValidationError:
       description: Request validation failed.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ValidationError'
+    MethodNotAllowed:
+      description: HTTP method not allowed for this path.
   securitySchemes:
     bearerAuth:
       type: http
