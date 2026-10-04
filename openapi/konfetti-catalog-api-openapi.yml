@@ -254,88 +254,7 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
 components:
-  parameters:
-    page:
-      name: page
-      in: query
-      description: 1-based page number.
-      schema:
-        type: integer
-        minimum: 1
-        default: 1
-    limit:
-      name: limit
-      in: query
-      description: Alternative page-size parameter used by the storefront; `limit=-1` requests an unpaginated result.
-      schema:
-        type: integer
-    id:
-      name: id
-      in: path
-      required: true
-      description: Six-character konfetti resource id (e.g. `xyn62z`).
-      schema:
-        type: string
-    orderBy:
-      name: orderBy
-      in: query
-      description: 'Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`.'
-      schema:
-        type: string
-    search:
-      name: search
-      in: query
-      description: 'Semicolon-delimited `field:value` filter expression (l5-repository style). Observed fields: `supplier_id`, `hasEvent`, `type`, `category`.'
-      schema:
-        type: string
-      example: hasEvent:true;type:ONLINE;category:kochkurs
-    permalink:
-      name: permalink
-      in: path
-      required: true
-      description: Slug-with-id permalink (e.g. `cocktailkurs-in-muenchen-0w1dlw`).
-      schema:
-        type: string
-    sortedBy:
-      name: sortedBy
-      in: query
-      description: Sort direction applied to orderBy.
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
-    searchFields:
-      name: searchFields
-      in: query
-      description: Comparison operator per search field, e.g. `supplier_id:!=` to negate.
-      schema:
-        type: string
-    include:
-      name: include
-      in: query
-      description: 'Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`.'
-      schema:
-        type: string
-      example: supplier,categories
-    perPage:
-      name: per_page
-      in: query
-      description: Page size. Default 10 (observed).
-      schema:
-        type: integer
-        default: 10
   schemas:
-    Error:
-      type: object
-      description: 'The generic Apiato error envelope. Observed verbatim on a 404: `{"message":"The requested Resource was not found.","errors":[]}`.'
-      properties:
-        message:
-          type: string
-        errors:
-          type:
-          - array
-          - object
     ValidationError:
       type: object
       description: The 422 validation envelope, observed verbatim from POST /v1/register.
@@ -496,6 +415,22 @@ components:
                   type: number
                 totalRating:
                   type: integer
+    CategoryPage:
+      allOf:
+      - $ref: '#/components/schemas/Category'
+      - type: object
+        properties:
+          parent_id:
+            type: string
+          seo_title:
+            type: string
+          seo_meta_description:
+            type: string
+          title:
+            type: string
+          description:
+            type: string
+            description: HTML landing-page copy.
     Supplier:
       type: object
       description: The partner/host that runs an experience.
@@ -514,6 +449,88 @@ components:
         description:
           type: string
           description: HTML body.
+    Money:
+      type: object
+      description: Monetary amount in minor units plus a locale-formatted string.
+      properties:
+        amount:
+          type: string
+          description: Minor units (cents), as a string.
+        currency:
+          type: string
+          examples:
+          - EUR
+        formatted:
+          type: string
+          examples:
+          - 29,00 €
+    ListMeta:
+      type: object
+      properties:
+        include:
+          type: array
+          description: Relations this endpoint accepts in `include`.
+          items:
+            type: string
+        custom:
+          type: array
+          items: {}
+        pagination:
+          type: object
+          properties:
+            total:
+              type: integer
+            count:
+              type: integer
+            per_page:
+              type: integer
+            current_page:
+              type: integer
+            total_pages:
+              type: integer
+            links:
+              type: object
+              properties:
+                previous:
+                  type: string
+                  format: uri
+                next:
+                  type: string
+                  format: uri
+    Instance:
+      type: object
+      description: A single scheduled occurrence (date) of an experience.
+      properties:
+        id:
+          type: string
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        status:
+          type: string
+          examples:
+          - OPEN
+        duration:
+          type: integer
+        date_type:
+          type: string
+          enum:
+          - PUBLIC
+          - PRIVATE
+        available_tickets_quantity:
+          type: integer
+        private_min_tickets:
+          type: integer
+        private_max_tickets:
+          type: integer
+        min_advance_date:
+          type: string
+          format: date-time
+        all_day:
+          type: boolean
     Photo:
       type: object
       properties:
@@ -556,107 +573,17 @@ components:
           - string
         total_reviews:
           type: integer
-    CategoryPage:
-      allOf:
-      - $ref: '#/components/schemas/Category'
-      - type: object
-        properties:
-          parent_id:
-            type: string
-          seo_title:
-            type: string
-          seo_meta_description:
-            type: string
-          title:
-            type: string
-          description:
-            type: string
-            description: HTML landing-page copy.
-    Instance:
+    Error:
       type: object
-      description: A single scheduled occurrence (date) of an experience.
+      description: 'The generic Apiato error envelope. Observed verbatim on a 404: `{"message":"The requested Resource was not found.","errors":[]}`.'
       properties:
-        id:
+        message:
           type: string
-        start:
-          type: string
-          format: date-time
-        end:
-          type: string
-          format: date-time
-        status:
-          type: string
-          examples:
-          - OPEN
-        duration:
-          type: integer
-        date_type:
-          type: string
-          enum:
-          - PUBLIC
-          - PRIVATE
-        available_tickets_quantity:
-          type: integer
-        private_min_tickets:
-          type: integer
-        private_max_tickets:
-          type: integer
-        min_advance_date:
-          type: string
-          format: date-time
-        all_day:
-          type: boolean
-    ListMeta:
-      type: object
-      properties:
-        include:
-          type: array
-          description: Relations this endpoint accepts in `include`.
-          items:
-            type: string
-        custom:
-          type: array
-          items: {}
-        pagination:
-          type: object
-          properties:
-            total:
-              type: integer
-            count:
-              type: integer
-            per_page:
-              type: integer
-            current_page:
-              type: integer
-            total_pages:
-              type: integer
-            links:
-              type: object
-              properties:
-                previous:
-                  type: string
-                  format: uri
-                next:
-                  type: string
-                  format: uri
-    Money:
-      type: object
-      description: Monetary amount in minor units plus a locale-formatted string.
-      properties:
-        amount:
-          type: string
-          description: Minor units (cents), as a string.
-        currency:
-          type: string
-          examples:
-          - EUR
-        formatted:
-          type: string
-          examples:
-          - 29,00 €
+        errors:
+          type:
+          - array
+          - object
   responses:
-    ServerError:
-      description: Server error.
     NotFound:
       description: Resource not found.
       content:
@@ -669,8 +596,81 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ValidationError'
+    ServerError:
+      description: Server error.
     MethodNotAllowed:
       description: HTTP method not allowed for this path.
+  parameters:
+    sortedBy:
+      name: sortedBy
+      in: query
+      description: Sort direction applied to orderBy.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+    orderBy:
+      name: orderBy
+      in: query
+      description: 'Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`.'
+      schema:
+        type: string
+    permalink:
+      name: permalink
+      in: path
+      required: true
+      description: Slug-with-id permalink (e.g. `cocktailkurs-in-muenchen-0w1dlw`).
+      schema:
+        type: string
+    searchFields:
+      name: searchFields
+      in: query
+      description: Comparison operator per search field, e.g. `supplier_id:!=` to negate.
+      schema:
+        type: string
+    page:
+      name: page
+      in: query
+      description: 1-based page number.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    id:
+      name: id
+      in: path
+      required: true
+      description: Six-character konfetti resource id (e.g. `xyn62z`).
+      schema:
+        type: string
+    limit:
+      name: limit
+      in: query
+      description: Alternative page-size parameter used by the storefront; `limit=-1` requests an unpaginated result.
+      schema:
+        type: integer
+    perPage:
+      name: per_page
+      in: query
+      description: Page size. Default 10 (observed).
+      schema:
+        type: integer
+        default: 10
+    search:
+      name: search
+      in: query
+      description: 'Semicolon-delimited `field:value` filter expression (l5-repository style). Observed fields: `supplier_id`, `hasEvent`, `type`, `category`.'
+      schema:
+        type: string
+      example: hasEvent:true;type:ONLINE;category:kochkurs
+    include:
+      name: include
+      in: query
+      description: 'Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`.'
+      schema:
+        type: string
+      example: supplier,categories
   securitySchemes:
     bearerAuth:
       type: http

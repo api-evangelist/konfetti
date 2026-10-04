@@ -165,17 +165,7 @@ paths:
         '200':
           description: Newsletter subscription recorded.
 components:
-  responses:
-    MethodNotAllowed:
-      description: HTTP method not allowed for this path.
   parameters:
-    id:
-      name: id
-      in: path
-      required: true
-      description: Six-character konfetti resource id (e.g. `xyn62z`).
-      schema:
-        type: string
     include:
       name: include
       in: query
@@ -183,6 +173,16 @@ components:
       schema:
         type: string
       example: supplier,categories
+    id:
+      name: id
+      in: path
+      required: true
+      description: Six-character konfetti resource id (e.g. `xyn62z`).
+      schema:
+        type: string
+  responses:
+    MethodNotAllowed:
+      description: HTTP method not allowed for this path.
   securitySchemes:
     bearerAuth:
       type: http
