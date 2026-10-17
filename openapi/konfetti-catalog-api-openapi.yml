@@ -255,24 +255,56 @@ paths:
           $ref: '#/components/responses/ValidationError'
 components:
   schemas:
-    ValidationError:
+    CategoryPage:
+      allOf:
+      - $ref: '#/components/schemas/Category'
+      - type: object
+        properties:
+          parent_id:
+            type: string
+          seo_title:
+            type: string
+          seo_meta_description:
+            type: string
+          title:
+            type: string
+          description:
+            type: string
+            description: HTML landing-page copy.
+    Instance:
       type: object
-      description: The 422 validation envelope, observed verbatim from POST /v1/register.
+      description: A single scheduled occurrence (date) of an experience.
       properties:
-        message:
+        id:
           type: string
-        code:
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        status:
+          type: string
+          examples:
+          - OPEN
+        duration:
           type: integer
-          const: 422
-        reason:
+        date_type:
           type: string
-          const: requestValidation
-        errors:
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              type: string
+          enum:
+          - PUBLIC
+          - PRIVATE
+        available_tickets_quantity:
+          type: integer
+        private_min_tickets:
+          type: integer
+        private_max_tickets:
+          type: integer
+        min_advance_date:
+          type: string
+          format: date-time
+        all_day:
+          type: boolean
     Event:
       type: object
       description: 'An experience description (`object: EventMetaData`) — the sellable product, distinct from its scheduled instances.'
@@ -415,22 +447,6 @@ components:
                   type: number
                 totalRating:
                   type: integer
-    CategoryPage:
-      allOf:
-      - $ref: '#/components/schemas/Category'
-      - type: object
-        properties:
-          parent_id:
-            type: string
-          seo_title:
-            type: string
-          seo_meta_description:
-            type: string
-          title:
-            type: string
-          description:
-            type: string
-            description: HTML landing-page copy.
     Supplier:
       type: object
       description: The partner/host that runs an experience.
@@ -464,6 +480,28 @@ components:
           type: string
           examples:
           - 29,00 €
+    Photo:
+      type: object
+      properties:
+        id:
+          type: integer
+        filename:
+          type: string
+        thumb:
+          type: string
+          format: uri
+        cropped:
+          type: string
+          format: uri
+        dimensions:
+          type: object
+          properties:
+            width:
+              type: number
+            height:
+              type: number
+        alt:
+          type: string
     ListMeta:
       type: object
       properties:
@@ -497,62 +535,34 @@ components:
                 next:
                   type: string
                   format: uri
-    Instance:
+    ValidationError:
       type: object
-      description: A single scheduled occurrence (date) of an experience.
+      description: The 422 validation envelope, observed verbatim from POST /v1/register.
       properties:
-        id:
+        message:
           type: string
-        start:
-          type: string
-          format: date-time
-        end:
-          type: string
-          format: date-time
-        status:
-          type: string
-          examples:
-          - OPEN
-        duration:
+        code:
           type: integer
-        date_type:
+          const: 422
+        reason:
           type: string
-          enum:
-          - PUBLIC
-          - PRIVATE
-        available_tickets_quantity:
-          type: integer
-        private_min_tickets:
-          type: integer
-        private_max_tickets:
-          type: integer
-        min_advance_date:
-          type: string
-          format: date-time
-        all_day:
-          type: boolean
-    Photo:
-      type: object
-      properties:
-        id:
-          type: integer
-        filename:
-          type: string
-        thumb:
-          type: string
-          format: uri
-        cropped:
-          type: string
-          format: uri
-        dimensions:
+          const: requestValidation
+        errors:
           type: object
-          properties:
-            width:
-              type: number
-            height:
-              type: number
-        alt:
+          additionalProperties:
+            type: array
+            items:
+              type: string
+    Error:
+      type: object
+      description: 'The generic Apiato error envelope. Observed verbatim on a 404: `{"message":"The requested Resource was not found.","errors":[]}`.'
+      properties:
+        message:
           type: string
+        errors:
+          type:
+          - array
+          - object
     Category:
       type: object
       properties:
@@ -573,34 +583,53 @@ components:
           - string
         total_reviews:
           type: integer
-    Error:
-      type: object
-      description: 'The generic Apiato error envelope. Observed verbatim on a 404: `{"message":"The requested Resource was not found.","errors":[]}`.'
-      properties:
-        message:
-          type: string
-        errors:
-          type:
-          - array
-          - object
   responses:
-    NotFound:
-      description: Resource not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     ValidationError:
       description: Request validation failed.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ValidationError'
-    ServerError:
-      description: Server error.
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     MethodNotAllowed:
       description: HTTP method not allowed for this path.
+    ServerError:
+      description: Server error.
   parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      description: Six-character konfetti resource id (e.g. `xyn62z`).
+      schema:
+        type: string
+    perPage:
+      name: per_page
+      in: query
+      description: Page size. Default 10 (observed).
+      schema:
+        type: integer
+        default: 10
+    include:
+      name: include
+      in: query
+      description: 'Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`.'
+      schema:
+        type: string
+      example: supplier,categories
+    page:
+      name: page
+      in: query
+      description: 1-based page number.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
     sortedBy:
       name: sortedBy
       in: query
@@ -610,38 +639,10 @@ components:
         enum:
         - asc
         - desc
-    orderBy:
-      name: orderBy
-      in: query
-      description: 'Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`.'
-      schema:
-        type: string
-    permalink:
-      name: permalink
-      in: path
-      required: true
-      description: Slug-with-id permalink (e.g. `cocktailkurs-in-muenchen-0w1dlw`).
-      schema:
-        type: string
     searchFields:
       name: searchFields
       in: query
       description: Comparison operator per search field, e.g. `supplier_id:!=` to negate.
-      schema:
-        type: string
-    page:
-      name: page
-      in: query
-      description: 1-based page number.
-      schema:
-        type: integer
-        minimum: 1
-        default: 1
-    id:
-      name: id
-      in: path
-      required: true
-      description: Six-character konfetti resource id (e.g. `xyn62z`).
       schema:
         type: string
     limit:
@@ -650,13 +651,19 @@ components:
       description: Alternative page-size parameter used by the storefront; `limit=-1` requests an unpaginated result.
       schema:
         type: integer
-    perPage:
-      name: per_page
-      in: query
-      description: Page size. Default 10 (observed).
+    permalink:
+      name: permalink
+      in: path
+      required: true
+      description: Slug-with-id permalink (e.g. `cocktailkurs-in-muenchen-0w1dlw`).
       schema:
-        type: integer
-        default: 10
+        type: string
+    orderBy:
+      name: orderBy
+      in: query
+      description: 'Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`.'
+      schema:
+        type: string
     search:
       name: search
       in: query
@@ -664,13 +671,6 @@ components:
       schema:
         type: string
       example: hasEvent:true;type:ONLINE;category:kochkurs
-    include:
-      name: include
-      in: query
-      description: 'Comma-separated relations to embed. Observed values for events: `categories`, `supplier`, `address`, `reviews`, and the dot-path `address.locality`. For categories: `thumbnail`. For the user profile: `customer`, `referralCoupon`.'
-      schema:
-        type: string
-      example: supplier,categories
   securitySchemes:
     bearerAuth:
       type: http

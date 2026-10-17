@@ -112,12 +112,14 @@ paths:
           description: Redirect to login when unauthenticated.
 components:
   parameters:
-    orderBy:
-      name: orderBy
+    page:
+      name: page
       in: query
-      description: 'Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`.'
+      description: 1-based page number.
       schema:
-        type: string
+        type: integer
+        minimum: 1
+        default: 1
     sortedBy:
       name: sortedBy
       in: query
@@ -127,14 +129,12 @@ components:
         enum:
         - asc
         - desc
-    page:
-      name: page
+    orderBy:
+      name: orderBy
       in: query
-      description: 1-based page number.
+      description: 'Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`.'
       schema:
-        type: integer
-        minimum: 1
-        default: 1
+        type: string
   responses:
     MethodNotAllowed:
       description: HTTP method not allowed for this path.
