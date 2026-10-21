@@ -1,5 +1,5 @@
 generated: '2026-07-19'
-method: searched
+method: none
 source: >-
   Registry and repository searches performed on 2026-07-19. No first-party
   konfetti client library was found on any registry, and konfetti operates no
@@ -58,3 +58,5 @@ gaps:
   - No SDK in any language.
   - No public source control presence.
   - No package published to Packagist despite running a PHP/Laravel stack.
+
+packages: []

@@ -1,0 +1,90 @@
+generated: '2026-10-20'
+method: derived
+generator: derive-vocabulary.py
+source:
+- openapi/konfetti-account-api-openapi.yml
+- openapi/konfetti-auth-api-openapi.yml
+- openapi/konfetti-catalog-api-openapi.yml
+- openapi/konfetti-checkout-api-openapi.yml
+- openapi/konfetti-requests-api-openapi.yml
+vocabulary:
+  name: konfetti Domain Vocabulary
+  description: 'Terms declared by konfetti''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-20'
+  terms:
+  - term: Account
+    definition: Authenticated customer profile and registration.
+    tags:
+    - Resource Group
+    source: openapi/konfetti-account-api-openapi.yml
+  - term: Auth
+    definition: OAuth 2.0 token issuance.
+    tags:
+    - Resource Group
+    source: openapi/konfetti-auth-api-openapi.yml
+  - term: Catalog
+    definition: Public read access to experiences and categories.
+    tags:
+    - Resource Group
+    source: openapi/konfetti-catalog-api-openapi.yml
+  - term: Checkout
+    definition: Cart validation, coupons and orders.
+    tags:
+    - Resource Group
+    source: openapi/konfetti-checkout-api-openapi.yml
+  - term: Requests
+    definition: Lead-capture endpoints for date and private-event requests.
+    tags:
+    - Resource Group
+    source: openapi/konfetti-requests-api-openapi.yml
+  - term: ValidationError
+    definition: The 422 validation envelope, observed verbatim from POST /v1/register.
+    tags:
+    - Object
+    source: openapi/konfetti-account-api-openapi.yml#/components/schemas/ValidationError
+  - term: OAuthError
+    definition: RFC 6749 error envelope from the League OAuth2 Server, observed verbatim on POST /v1/oauth/token with an empty body.
+    tags:
+    - Object
+    source: openapi/konfetti-auth-api-openapi.yml#/components/schemas/OAuthError
+  - term: Photo
+    definition: 'Object declared by the contract with fields: id, filename, thumb, cropped, dimensions, alt.'
+    tags:
+    - Object
+    source: openapi/konfetti-catalog-api-openapi.yml#/components/schemas/Photo
+  - term: Category
+    definition: 'Object declared by the contract with fields: object, id, name, slug, featured, avg_review, total_reviews.'
+    tags:
+    - Object
+    source: openapi/konfetti-catalog-api-openapi.yml#/components/schemas/Category
+  - term: Instance
+    definition: A single scheduled occurrence (date) of an experience.
+    tags:
+    - Object
+    source: openapi/konfetti-catalog-api-openapi.yml#/components/schemas/Instance
+  - term: Event
+    definition: 'An experience description (`object: EventMetaData`) — the sellable product, distinct from its scheduled instances.'
+    tags:
+    - Object
+    source: openapi/konfetti-catalog-api-openapi.yml#/components/schemas/Event
+  - term: ListMeta
+    definition: 'Object declared by the contract with fields: include, custom, pagination.'
+    tags:
+    - Object
+    source: openapi/konfetti-catalog-api-openapi.yml#/components/schemas/ListMeta
+  - term: Supplier
+    definition: The partner/host that runs an experience.
+    tags:
+    - Object
+    source: openapi/konfetti-catalog-api-openapi.yml#/components/schemas/Supplier
+  - term: Money
+    definition: Monetary amount in minor units plus a locale-formatted string.
+    tags:
+    - Object
+    source: openapi/konfetti-catalog-api-openapi.yml#/components/schemas/Money
+  - term: Error
+    definition: 'The generic Apiato error envelope. Observed verbatim on a 404: `{"message":"The requested Resource was not found.","errors":[]}`.'
+    tags:
+    - Object
+    source: openapi/konfetti-catalog-api-openapi.yml#/components/schemas/Error

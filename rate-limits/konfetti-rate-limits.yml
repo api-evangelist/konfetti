@@ -1,0 +1,6 @@
+name: konfetti rate limits
+generated: '2026-10-20'
+method: none
+limit_count: 0
+limits: []
+note: konfetti publishes no developer documentation; no rate limits are documented. api.gokonfetti.com/docs returned 500 and /openapi.json 404 on 2026-10-20.

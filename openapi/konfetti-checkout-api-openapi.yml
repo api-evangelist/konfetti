@@ -5,7 +5,9 @@ info:
   x-generated: '2026-07-19'
   x-method: derived
   x-source: Derived by API Evangelist from direct observation of the live konfetti API at https://api.gokonfetti.com/v1 (every path and status code below was probed on 2026-07-19) plus the publicly served gokonfetti.com Nuxt application bundles under /_nuxt3/*.js, which name the endpoints, request bodies and query conventions the storefront uses. konfetti publishes no developer portal, no OpenAPI document and no API reference; this description is an honest reconstruction of the observable surface, not a provider-published specification. Nothing here is invented — schemas are modelled only from responses actually returned.
-  description: konfetti (Konfetti GmbH, Berlin) operates a marketplace for bookable experiences, courses and workshops in Germany and Austria.
+  description: 'konfetti (Konfetti GmbH, Berlin) operates a marketplace for bookable experiences, courses and workshops in Germany and Austria. The storefront at gokonfetti.com is a Nuxt 3 application backed by a JSON API served from api.gokonfetti.com — an Apiato/Laravel service exposing a `/v1/store/*` catalog namespace (public, unauthenticated read), a `/v1/checkout/*` and `/v1/user/*` namespace (Bearer-token authenticated), and an OAuth 2.0 token endpoint at `/v1/oauth/token`.
+
+    This is an INTERNAL / UNDOCUMENTED API. konfetti does not market it as a public product, publishes no terms of use for it, and may change it without notice. Treat it as observational documentation, not a contract.'
   contact:
     name: konfetti (Konfetti GmbH)
     email: hallo@gokonfetti.com
@@ -120,6 +122,12 @@ components:
         type: integer
         minimum: 1
         default: 1
+    orderBy:
+      name: orderBy
+      in: query
+      description: 'Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`.'
+      schema:
+        type: string
     sortedBy:
       name: sortedBy
       in: query
@@ -129,12 +137,6 @@ components:
         enum:
         - asc
         - desc
-    orderBy:
-      name: orderBy
-      in: query
-      description: 'Comma-separated sort fields. Observed: `created_at`, `distance`, `has_events`, `has_promotion`, `trending_90_days`.'
-      schema:
-        type: string
   responses:
     MethodNotAllowed:
       description: HTTP method not allowed for this path.

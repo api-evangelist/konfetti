@@ -1,0 +1,363 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/konfetti/main/json-schema/konfetti-event-schema.json",
+  "title": "Event",
+  "description": "An experience description (`object: EventMetaData`) — the sellable product, distinct from its scheduled instances.",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/konfetti-catalog-api-openapi.yml#/components/schemas/Event",
+  "type": "object",
+  "properties": {
+    "object": {
+      "type": "string",
+      "const": "EventMetaData"
+    },
+    "id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "description": "HTML body, returned on the detail endpoint."
+    },
+    "type": {
+      "type": "string"
+    },
+    "permalink": {
+      "type": "string"
+    },
+    "default_duration": {
+      "type": "integer",
+      "description": "Minutes."
+    },
+    "duration_summary": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "multiple_locations": {
+      "type": "boolean"
+    },
+    "default_price": {
+      "$ref": "#/$defs/Money"
+    },
+    "retail_price": {
+      "$ref": "#/$defs/Money"
+    },
+    "original_price": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Money"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "min_price": {
+      "$ref": "#/$defs/Money"
+    },
+    "max_price": {
+      "$ref": "#/$defs/Money"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "readable_created_at": {
+      "type": "string",
+      "description": "Locale-formatted relative time."
+    },
+    "readable_updated_at": {
+      "type": "string"
+    },
+    "timezone": {
+      "type": "string"
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "is_team_event": {
+      "type": "boolean"
+    },
+    "is_group_pricing": {
+      "type": "boolean"
+    },
+    "next_instance": {
+      "$ref": "#/$defs/Instance"
+    },
+    "min_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "max_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "min_duration": {
+      "type": "integer"
+    },
+    "max_duration": {
+      "type": "integer"
+    },
+    "avg_review": {
+      "type": "number"
+    },
+    "total_reviews": {
+      "type": "integer"
+    },
+    "review_breakdown": {
+      "type": "object",
+      "properties": {
+        "1_star": {
+          "type": "integer"
+        },
+        "2_star": {
+          "type": "integer"
+        },
+        "3_star": {
+          "type": "integer"
+        },
+        "4_star": {
+          "type": "integer"
+        },
+        "5_star": {
+          "type": "integer"
+        }
+      }
+    },
+    "has_mobile_classes": {
+      "type": "boolean"
+    },
+    "has_shipping_costs": {
+      "type": "integer"
+    },
+    "specialization": {
+      "type": "string"
+    },
+    "has_promotions": {
+      "type": "boolean"
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Photo"
+      }
+    },
+    "media": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Photo"
+      }
+    },
+    "categories": {
+      "type": "object",
+      "description": "Present when `include=categories`.",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Category"
+          }
+        }
+      }
+    },
+    "supplier": {
+      "type": "object",
+      "description": "Present when `include=supplier`.",
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/Supplier"
+        }
+      }
+    },
+    "address": {
+      "type": "object",
+      "description": "Present when `include=address` or `include=address.locality`."
+    },
+    "reviews": {
+      "type": "object",
+      "description": "Present when `include=reviews`.",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "rating": {
+              "type": "number"
+            },
+            "totalRating": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "Category": {
+      "type": "object",
+      "properties": {
+        "object": {
+          "type": "string",
+          "const": "Category"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "featured": {
+          "type": "boolean"
+        },
+        "avg_review": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "total_reviews": {
+          "type": "integer"
+        }
+      }
+    },
+    "Instance": {
+      "type": "object",
+      "description": "A single scheduled occurrence (date) of an experience.",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "integer"
+        },
+        "date_type": {
+          "type": "string",
+          "enum": [
+            "PUBLIC",
+            "PRIVATE"
+          ]
+        },
+        "available_tickets_quantity": {
+          "type": "integer"
+        },
+        "private_min_tickets": {
+          "type": "integer"
+        },
+        "private_max_tickets": {
+          "type": "integer"
+        },
+        "min_advance_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "all_day": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Money": {
+      "type": "object",
+      "description": "Monetary amount in minor units plus a locale-formatted string.",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "description": "Minor units (cents), as a string."
+        },
+        "currency": {
+          "type": "string"
+        },
+        "formatted": {
+          "type": "string"
+        }
+      }
+    },
+    "Photo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "filename": {
+          "type": "string"
+        },
+        "thumb": {
+          "type": "string",
+          "format": "uri"
+        },
+        "cropped": {
+          "type": "string",
+          "format": "uri"
+        },
+        "dimensions": {
+          "type": "object",
+          "properties": {
+            "width": {
+              "type": "number"
+            },
+            "height": {
+              "type": "number"
+            }
+          }
+        },
+        "alt": {
+          "type": "string"
+        }
+      }
+    },
+    "Supplier": {
+      "type": "object",
+      "description": "The partner/host that runs an experience.",
+      "properties": {
+        "object": {
+          "type": "string",
+          "const": "Supplier"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "page_title": {
+          "type": "string"
+        },
+        "permalink": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "HTML body."
+        }
+      }
+    }
+  }
+}

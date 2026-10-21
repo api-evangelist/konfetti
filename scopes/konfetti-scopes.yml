@@ -1,0 +1,44 @@
+generated: '2026-10-20'
+method: none
+source: openapi/konfetti-account-api-openapi.yml, openapi/konfetti-auth-api-openapi.yml, openapi/konfetti-catalog-api-openapi.yml,
+  openapi/konfetti-checkout-api-openapi.yml, openapi/konfetti-requests-api-openapi.yml, openapi/konfetti-store-openapi.yml
+schemes:
+- name: oauth2
+  source: openapi/konfetti-account-api-openapi.yml
+  flows: []
+  description: OAuth 2.0 token endpoint confirmed at /v1/oauth/token (League OAuth2 Server).
+    No authorization endpoint, discovery document or scope reference is published, so no flows
+    are enumerated here.
+- name: oauth2
+  source: openapi/konfetti-auth-api-openapi.yml
+  flows: []
+  description: OAuth 2.0 token endpoint confirmed at /v1/oauth/token (League OAuth2 Server).
+    No authorization endpoint, discovery document or scope reference is published, so no flows
+    are enumerated here.
+- name: oauth2
+  source: openapi/konfetti-catalog-api-openapi.yml
+  flows: []
+  description: OAuth 2.0 token endpoint confirmed at /v1/oauth/token (League OAuth2 Server).
+    No authorization endpoint, discovery document or scope reference is published, so no flows
+    are enumerated here.
+- name: oauth2
+  source: openapi/konfetti-checkout-api-openapi.yml
+  flows: []
+  description: OAuth 2.0 token endpoint confirmed at /v1/oauth/token (League OAuth2 Server).
+    No authorization endpoint, discovery document or scope reference is published, so no flows
+    are enumerated here.
+- name: oauth2
+  source: openapi/konfetti-requests-api-openapi.yml
+  flows: []
+  description: OAuth 2.0 token endpoint confirmed at /v1/oauth/token (League OAuth2 Server).
+    No authorization endpoint, discovery document or scope reference is published, so no flows
+    are enumerated here.
+- name: oauth2
+  source: openapi/konfetti-store-openapi.yml
+  flows: []
+  description: OAuth 2.0 token endpoint confirmed at /v1/oauth/token (League OAuth2 Server).
+    No authorization endpoint, discovery document or scope reference is published, so no flows
+    are enumerated here.
+scopes: []
+note: The OAuth2 security scheme(s) in the OpenAPI declare no scopes, and no security requirement
+  references one.

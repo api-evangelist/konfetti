@@ -1,0 +1,5 @@
+Canonical: https://join.com/.well-known/security.txt
+Contact: mailto: security@join.com
+Expires: 2029-01-01T12:00:00Z
+Policy: https://join.com/vulnerability-disclosure
+Preferred-Languages: en

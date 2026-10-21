@@ -1,0 +1,53 @@
+name: konfetti pricing
+generated: '2026-10-20'
+method: searched
+source: https://gokonfetti.com/de-de/partner/
+audience: business-product
+pricing_basis: tiered-subscription
+published: true
+currency: EUR
+delivery:
+  delivery: managed
+note: Partner (host) subscription tiers for the konfetti booking-management product; each tier adds a success-based commission whose rate is not published. All tiers include a 30-day free trial. No API pricing is published.
+plans:
+- name: Starter
+  description: Für kleine Unternehmen
+  price: 29
+  price_text: 29 € monatlich + erfolgsbasierte Provision
+  billing_period: month
+  features:
+  - All-in-one Buchungsmanagement
+  - Ticket- und Gutscheinverkauf
+  - Online-Buchungslösung
+  - KI-Support
+  - Persönliches Onboarding
+  limits:
+  - Monatliche Umsätze bis 2.000 €
+  - 1 Nutzer
+- name: Professional
+  description: Für stark wachsende Anbieter
+  price: 99
+  price_text: 99 € monatlich + erfolgsbasierte Provision
+  billing_period: month
+  features:
+  - All-in-one Buchungsmanagement
+  - Ticket- und Gutscheinverkauf
+  - Online-Buchungslösung
+  - E-Mail-Support
+  - Onboarding Meeting
+  limits:
+  - Monatliche Umsätze bis 5.000 €
+  - 5 Nutzer
+- name: Enterprise
+  description: Für große Anbieter
+  price: 299
+  price_text: 299 € monatlich + erfolgsbasierte Provision
+  billing_period: month
+  features:
+  - All-in-one Buchungsmanagement
+  - Ticket- und Gutscheinverkauf
+  - Online-Buchungslösung
+  - Persönlicher Account Manager
+  limits:
+  - Unbegrenzte Umsätze
+  - 25 Nutzer

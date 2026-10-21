@@ -1,0 +1,202 @@
+generated: '2026-10-20'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 16
+  own: 5
+  other_domain: 8
+  platform: 3
+  roles:
+  - api
+  - docs
+  - identity
+  - other
+  - partner
+  - website
+hosts:
+- host: api.gokonfetti.com
+  found_by:
+  - apis[]
+  - probed
+  - site-links
+  - contract-discovery
+  - well-known
+  types: []
+  serves:
+  - api
+  registrable_domain: gokonfetti.com
+  role: api
+  relation: own
+- host: api.instagram.com
+  found_by:
+  - contract-discovery
+  types: []
+  serves: []
+  registrable_domain: instagram.com
+  role: api
+  relation: other-domain
+- host: api.iubenda.com
+  found_by:
+  - contract-discovery
+  types: []
+  serves: []
+  registrable_domain: iubenda.com
+  role: api
+  relation: other-domain
+- host: api.join.com
+  found_by:
+  - contract-discovery
+  types: []
+  serves: []
+  registrable_domain: join.com
+  role: api
+  relation: other-domain
+- host: api.pinterest.com
+  found_by:
+  - contract-discovery
+  types: []
+  serves: []
+  registrable_domain: pinterest.com
+  role: api
+  relation: other-domain
+- host: backoffice.gokonfetti.com
+  found_by:
+  - pointer
+  - probed
+  - well-known
+  types:
+  - Login
+  - Portal
+  serves: []
+  registrable_domain: gokonfetti.com
+  role: identity
+  relation: own
+- host: de.pinterest.com
+  found_by:
+  - pointer
+  - probed
+  - well-known
+  types:
+  - Pinterest
+  serves: []
+  registrable_domain: pinterest.com
+  role: other
+  relation: other-domain
+- host: gokonfetti.com
+  found_by:
+  - pointer
+  - apis[]
+  - probed
+  - well-known
+  - vendor-detect
+  types:
+  - Website
+  - FAQ
+  - Blog
+  - SignUp
+  - Pricing
+  - TermsOfService
+  - PrivacyPolicy
+  - Accessibility
+  - LegalNotice
+  serves:
+  - docs
+  - cdn
+  vendor: cloudfront
+  registrable_domain: gokonfetti.com
+  role: website
+  relation: own
+- host: help.gokonfetti.com
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - docs-index
+  - well-known
+  - vendor-detect
+  types:
+  - Documentation
+  - HelpCenter
+  - Support
+  serves:
+  - docs
+  - cdn
+  - hosting
+  vendor: cloudflare
+  registrable_domain: gokonfetti.com
+  role: docs
+  relation: own
+- host: join.com
+  found_by:
+  - pointer
+  - probed
+  - well-known
+  types:
+  - Jobs
+  serves: []
+  registrable_domain: join.com
+  role: other
+  relation: other-domain
+- host: konfetti.notion.site
+  found_by:
+  - pointer
+  types:
+  - Press
+  - Partners
+  serves: []
+  registrable_domain: notion.site
+  role: other
+  relation: platform
+- host: partner.gokonfetti.com
+  found_by:
+  - probed
+  - site-links
+  - namespace-probe
+  types: []
+  serves: []
+  title: konfetti Helpcenter 2.0
+  status: 200
+  registrable_domain: gokonfetti.com
+  role: partner
+  relation: own
+- host: www.facebook.com
+  found_by:
+  - pointer
+  types:
+  - Facebook
+  serves: []
+  registrable_domain: facebook.com
+  role: other
+  relation: platform
+- host: www.instagram.com
+  found_by:
+  - pointer
+  - probed
+  - well-known
+  types:
+  - Instagram
+  serves: []
+  registrable_domain: instagram.com
+  role: other
+  relation: other-domain
+- host: www.iubenda.com
+  found_by:
+  - pointer
+  - probed
+  - well-known
+  types:
+  - CookiePolicy
+  serves: []
+  registrable_domain: iubenda.com
+  role: other
+  relation: other-domain
+- host: www.linkedin.com
+  found_by:
+  - pointer
+  types:
+  - LinkedIn
+  serves: []
+  registrable_domain: linkedin.com
+  role: other
+  relation: platform

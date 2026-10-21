@@ -1,0 +1,12 @@
+generated: '2026-10-20'
+method: searched
+source: https://gokonfetti.com/de-de/b2c/accessibility-declaration/
+signals:
+  accessibility_conformance:
+    url: https://gokonfetti.com/de-de/b2c/accessibility-declaration/
+    standard: EN 301 549 v3.2.1 / WCAG 2.1 Level AA
+    status: partial
+    evidence:
+    - url: https://gokonfetti.com/de-de/b2c/accessibility-declaration/
+      quote: Die konfetti-Plattform ist teilweise konform mit EN 301 549 v3.2.1 und
+        WCAG 2.1, Level AA.

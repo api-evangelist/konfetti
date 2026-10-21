@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/konfetti/main/json-schema/konfetti-category-page-schema.json",
+  "title": "CategoryPage",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/konfetti-catalog-api-openapi.yml#/components/schemas/CategoryPage",
+  "allOf": [
+    {
+      "$ref": "#/$defs/Category"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "parent_id": {
+          "type": "string"
+        },
+        "seo_title": {
+          "type": "string"
+        },
+        "seo_meta_description": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "HTML landing-page copy."
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "Category": {
+      "type": "object",
+      "properties": {
+        "object": {
+          "type": "string",
+          "const": "Category"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "featured": {
+          "type": "boolean"
+        },
+        "avg_review": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "total_reviews": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

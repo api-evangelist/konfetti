@@ -1,0 +1,16 @@
+generated: '2026-10-20'
+method: none
+source:
+- https://zapier.com/apps/konfetti/integrations
+- https://n8n.io/integrations/konfetti/
+- https://composio.dev/toolkits/konfetti
+- https://monid.ai/tools/konfetti
+checked:
+- https://composio.dev/toolkits/konfetti
+- https://monid.ai/tools/konfetti
+- https://n8n.io/integrations/konfetti/
+- https://zapier.com/apps/konfetti/integrations
+summary: null
+marketplace_apps: []
+edges: []
+templates: []

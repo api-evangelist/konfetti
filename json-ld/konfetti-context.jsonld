@@ -1,0 +1,313 @@
+{
+  "@context": {
+    "@vocab": "https://gokonfetti.com/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "konfetti": "https://gokonfetti.com/schema#",
+    "ValidationError": "konfetti:ValidationError",
+    "message": {
+      "@id": "konfetti:message",
+      "@type": "xsd:string"
+    },
+    "code": {
+      "@id": "konfetti:code",
+      "@type": "xsd:integer"
+    },
+    "reason": {
+      "@id": "konfetti:reason",
+      "@type": "xsd:string"
+    },
+    "errors": {
+      "@id": "konfetti:errors"
+    },
+    "OAuthError": "konfetti:OAuthError",
+    "error": {
+      "@id": "konfetti:error",
+      "@type": "xsd:string"
+    },
+    "error_description": {
+      "@id": "konfetti:error_description",
+      "@type": "xsd:string"
+    },
+    "hint": {
+      "@id": "konfetti:hint",
+      "@type": "xsd:string"
+    },
+    "Instance": "konfetti:Instance",
+    "id": {
+      "@id": "konfetti:id",
+      "@type": "xsd:string"
+    },
+    "start": {
+      "@id": "konfetti:start",
+      "@type": "xsd:dateTime"
+    },
+    "end": {
+      "@id": "konfetti:end",
+      "@type": "xsd:dateTime"
+    },
+    "status": {
+      "@id": "konfetti:status",
+      "@type": "xsd:string"
+    },
+    "duration": {
+      "@id": "konfetti:duration",
+      "@type": "xsd:integer"
+    },
+    "date_type": {
+      "@id": "konfetti:date_type",
+      "@type": "xsd:string"
+    },
+    "available_tickets_quantity": {
+      "@id": "konfetti:available_tickets_quantity",
+      "@type": "xsd:integer"
+    },
+    "private_min_tickets": {
+      "@id": "konfetti:private_min_tickets",
+      "@type": "xsd:integer"
+    },
+    "private_max_tickets": {
+      "@id": "konfetti:private_max_tickets",
+      "@type": "xsd:integer"
+    },
+    "min_advance_date": {
+      "@id": "konfetti:min_advance_date",
+      "@type": "xsd:dateTime"
+    },
+    "all_day": {
+      "@id": "konfetti:all_day",
+      "@type": "xsd:boolean"
+    },
+    "Event": "konfetti:Event",
+    "object": {
+      "@id": "konfetti:object",
+      "@type": "xsd:string"
+    },
+    "title": {
+      "@id": "konfetti:title",
+      "@type": "xsd:string"
+    },
+    "subtitle": {
+      "@id": "konfetti:subtitle",
+      "@type": "xsd:string"
+    },
+    "description": {
+      "@id": "konfetti:description",
+      "@type": "xsd:string"
+    },
+    "type": {
+      "@id": "konfetti:type",
+      "@type": "xsd:string"
+    },
+    "permalink": {
+      "@id": "konfetti:permalink",
+      "@type": "xsd:string"
+    },
+    "default_duration": {
+      "@id": "konfetti:default_duration",
+      "@type": "xsd:integer"
+    },
+    "duration_summary": {
+      "@id": "konfetti:duration_summary",
+      "@type": "xsd:string"
+    },
+    "multiple_locations": {
+      "@id": "konfetti:multiple_locations",
+      "@type": "xsd:boolean"
+    },
+    "default_price": {
+      "@id": "konfetti:default_price",
+      "@type": "@id"
+    },
+    "retail_price": {
+      "@id": "konfetti:retail_price",
+      "@type": "@id"
+    },
+    "original_price": {
+      "@id": "konfetti:original_price"
+    },
+    "min_price": {
+      "@id": "konfetti:min_price",
+      "@type": "@id"
+    },
+    "max_price": {
+      "@id": "konfetti:max_price",
+      "@type": "@id"
+    },
+    "created_at": {
+      "@id": "konfetti:created_at",
+      "@type": "xsd:dateTime"
+    },
+    "updated_at": {
+      "@id": "konfetti:updated_at",
+      "@type": "xsd:dateTime"
+    },
+    "readable_created_at": {
+      "@id": "konfetti:readable_created_at",
+      "@type": "xsd:string"
+    },
+    "readable_updated_at": {
+      "@id": "konfetti:readable_updated_at",
+      "@type": "xsd:string"
+    },
+    "timezone": {
+      "@id": "konfetti:timezone",
+      "@type": "xsd:string"
+    },
+    "languages": {
+      "@id": "konfetti:languages",
+      "@container": "@list"
+    },
+    "is_team_event": {
+      "@id": "konfetti:is_team_event",
+      "@type": "xsd:boolean"
+    },
+    "is_group_pricing": {
+      "@id": "konfetti:is_group_pricing",
+      "@type": "xsd:boolean"
+    },
+    "next_instance": {
+      "@id": "konfetti:next_instance",
+      "@type": "@id"
+    },
+    "min_date": {
+      "@id": "konfetti:min_date",
+      "@type": "xsd:dateTime"
+    },
+    "max_date": {
+      "@id": "konfetti:max_date",
+      "@type": "xsd:dateTime"
+    },
+    "min_duration": {
+      "@id": "konfetti:min_duration",
+      "@type": "xsd:integer"
+    },
+    "max_duration": {
+      "@id": "konfetti:max_duration",
+      "@type": "xsd:integer"
+    },
+    "avg_review": {
+      "@id": "konfetti:avg_review",
+      "@type": "xsd:decimal"
+    },
+    "total_reviews": {
+      "@id": "konfetti:total_reviews",
+      "@type": "xsd:integer"
+    },
+    "review_breakdown": {
+      "@id": "konfetti:review_breakdown"
+    },
+    "has_mobile_classes": {
+      "@id": "konfetti:has_mobile_classes",
+      "@type": "xsd:boolean"
+    },
+    "has_shipping_costs": {
+      "@id": "konfetti:has_shipping_costs",
+      "@type": "xsd:integer"
+    },
+    "specialization": {
+      "@id": "konfetti:specialization",
+      "@type": "xsd:string"
+    },
+    "has_promotions": {
+      "@id": "konfetti:has_promotions",
+      "@type": "xsd:boolean"
+    },
+    "photos": {
+      "@id": "konfetti:photos",
+      "@container": "@list"
+    },
+    "media": {
+      "@id": "konfetti:media",
+      "@container": "@list"
+    },
+    "categories": {
+      "@id": "konfetti:categories"
+    },
+    "supplier": {
+      "@id": "konfetti:supplier"
+    },
+    "address": {
+      "@id": "konfetti:address"
+    },
+    "reviews": {
+      "@id": "konfetti:reviews"
+    },
+    "Supplier": "konfetti:Supplier",
+    "name": {
+      "@id": "konfetti:name",
+      "@type": "xsd:string"
+    },
+    "page_title": {
+      "@id": "konfetti:page_title",
+      "@type": "xsd:string"
+    },
+    "Money": "konfetti:Money",
+    "amount": {
+      "@id": "konfetti:amount",
+      "@type": "xsd:string"
+    },
+    "currency": {
+      "@id": "konfetti:currency",
+      "@type": "xsd:string"
+    },
+    "formatted": {
+      "@id": "konfetti:formatted",
+      "@type": "xsd:string"
+    },
+    "Photo": "konfetti:Photo",
+    "filename": {
+      "@id": "konfetti:filename",
+      "@type": "xsd:string"
+    },
+    "thumb": {
+      "@id": "konfetti:thumb",
+      "@type": "@id"
+    },
+    "cropped": {
+      "@id": "konfetti:cropped",
+      "@type": "@id"
+    },
+    "dimensions": {
+      "@id": "konfetti:dimensions"
+    },
+    "alt": {
+      "@id": "konfetti:alt",
+      "@type": "xsd:string"
+    },
+    "ListMeta": "konfetti:ListMeta",
+    "include": {
+      "@id": "konfetti:include",
+      "@container": "@list"
+    },
+    "custom": {
+      "@id": "konfetti:custom",
+      "@container": "@list"
+    },
+    "pagination": {
+      "@id": "konfetti:pagination"
+    },
+    "Error": "konfetti:Error",
+    "Category": "konfetti:Category",
+    "slug": {
+      "@id": "konfetti:slug",
+      "@type": "xsd:string"
+    },
+    "featured": {
+      "@id": "konfetti:featured",
+      "@type": "xsd:boolean"
+    }
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "konfetti API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects konfetti's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-20) from openapi/konfetti-account-api-openapi.yml, openapi/konfetti-auth-api-openapi.yml, openapi/konfetti-catalog-api-openapi.yml.",
+  "dcterms:created": "2026-10-20",
+  "dcterms:source": [
+    "openapi/konfetti-account-api-openapi.yml",
+    "openapi/konfetti-auth-api-openapi.yml",
+    "openapi/konfetti-catalog-api-openapi.yml",
+    "openapi/konfetti-checkout-api-openapi.yml",
+    "openapi/konfetti-requests-api-openapi.yml"
+  ]
+}
