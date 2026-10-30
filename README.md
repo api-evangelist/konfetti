@@ -64,16 +64,162 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-konfetti (Konfetti GmbH, Berlin) operates a marketplace for bookable experiences — cooking classes, pottery and ceramics workshops, cocktail courses, tastings, boat tours, creative and craft workshops, DIY kits and team events — across Germany and Austria, with more than 7,600 listings. Alongside the consumer storefront it sells an all-in-one booking-management product to partner hosts, including an embeddable booking solution and marketing widgets.
+konfetti (Konfetti GmbH, Berlin) operates a marketplace for bookable experiences — cooking classes, pottery and ceramics workshops, cocktail courses, tastings, boat tours, creative and craft workshops, DIY kits and team events — across Germany and Austria, with more than 7,600 bookable experience listings and coverage in Berlin, Munich, Cologne, Hamburg, Frankfurt, Stuttgart, Dusseldorf, Leipzig, Dresden, Hannover, Nuremberg, Muenster, Heidelberg and Vienna. Alongside the consumer storefront, konfetti sells an all-in-one booking-management product to its partner hosts: a back-office at backoffice.gokonfetti.com for managing experiences, dates, tickets, gift cards, invoicing and payouts, plus an embeddable booking solution and a set of embeddable widgets that partners place on their own websites and social channels. konfetti is backed by Speedinvest. It publishes no public developer portal or API reference; the JSON API behind the storefront at api.gokonfetti.com is documented here observationally by API Evangelist.
 
-Backed by: speedinvest
+**Areas:** Company · Marketplace · Experience · Booking · Event · Workshops · Ticketing · Gift Cards · Travel And Leisure · Germany · Commerce
 
-## A note on the API artifacts in this repository
+## konfetti on APIs.io
 
-konfetti publishes **no developer portal, no API reference and no OpenAPI document**. A JSON API does exist at `https://api.gokonfetti.com/v1`, and its `/v1/store/*` catalog endpoints answer without credentials, but it is an internal interface serving konfetti's own storefront.
+Everything profiled for konfetti is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/konfetti/](https://apis.io/providers/konfetti/)** — or go straight to one of the APIs or properties below.
 
-Everything under `openapi/` and the artifacts derived from it was reconstructed by API Evangelist from direct probing of the live API and from konfetti's own publicly served frontend bundles, on 2026-07-19. Every status code recorded was observed. Nothing was invented.
+### APIs (5)
 
-There are no published terms of use covering programmatic access, no rate limits, no versioning policy beyond the `/v1` prefix, no deprecation policy, no status page and no developer support channel. Treat these artifacts as research material, not as a contract — and contact konfetti (hallo@gokonfetti.com) before building on them.
+- [konfetti Account API](https://apis.io/apis/konfetti/konfetti-account-api/) — Authenticated customer profile and registration.
+- [konfetti Auth API](https://apis.io/apis/konfetti/konfetti-auth-api/) — OAuth 2.0 token issuance.
+- [konfetti Catalog API](https://apis.io/apis/konfetti/konfetti-catalog-api/) — Public read access to experiences and categories.
+- [konfetti Checkout API](https://apis.io/apis/konfetti/konfetti-checkout-api/) — Cart validation, coupons and orders.
+- [konfetti Requests API](https://apis.io/apis/konfetti/konfetti-requests-api/) — Lead-capture endpoints for date and private-event requests.
 
-See `llms/konfetti-llms.txt` for a full index of what is in this repository.
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [konfetti-mcp.yml](https://apis.io/servers/konfetti/konfetti-mcp-yml/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Konfetti Agentic Access](https://apis.io/agentic-access/konfetti/konfetti-agentic-access/)
+
+#### JSON Schema (4)
+
+The data models the API reads and writes.
+
+- [Category](https://apis.io/schemas/konfetti/konfetti-category/)
+- [CategoryPage](https://apis.io/schemas/konfetti/konfetti-category-page/)
+- [Event](https://apis.io/schemas/konfetti/konfetti-event/)
+- [ListMeta](https://apis.io/schemas/konfetti/konfetti-list-meta/)
+
+#### JSON-LD (1)
+
+Linked-data contexts for the provider's vocabulary.
+
+- [Konfetti Context](https://apis.io/jsonld/konfetti/konfetti-context/)
+
+#### Collections (5)
+
+Postman and Open Collection request collections.
+
+- [konfetti Store account API](https://apis.io/collections/konfetti/open-konfetti-account-api/)
+- [konfetti Store account auth API](https://apis.io/collections/konfetti/open-konfetti-auth-api/)
+- [konfetti Store account catalog API](https://apis.io/collections/konfetti/open-konfetti-catalog-api/)
+- [konfetti Store account checkout API](https://apis.io/collections/konfetti/open-konfetti-checkout-api/)
+- [konfetti Store account requests API](https://apis.io/collections/konfetti/open-konfetti-requests-api/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Konfetti Store Overlay](https://apis.io/overlays/konfetti/konfetti-store-overlay/)
+
+#### Governance rules (1)
+
+Spectral rulesets for the provider's contracts.
+
+- [konfetti API Rules](https://apis.io/rules/konfetti/konfetti-rules/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Konfetti Authentication](https://apis.io/security/konfetti/konfetti-authentication/)
+- [Konfetti Domain Security](https://apis.io/security/konfetti/konfetti-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Konfetti Scopes](https://apis.io/scopes/konfetti/konfetti-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Konfetti Plans Pricing](https://apis.io/plans/konfetti/konfetti-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Konfetti Rate Limits](https://apis.io/rate-limits/konfetti/konfetti-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://gokonfetti.com)
+- [Documentation](https://help.gokonfetti.com/)
+- [Pricing](https://gokonfetti.com/de-de/partner/)
+- [Sign up](https://gokonfetti.com/de-de/partner/)
+- [Support](https://help.gokonfetti.com)
+- [Blog](https://gokonfetti.com/de-de/magazine/)
+- [Terms of service](https://gokonfetti.com/de-de/terms-and-conditions/)
+- [Privacy policy](https://gokonfetti.com/de-de/privacy-policy/)
+
+## API Evangelist rating
+
+**Kin Score 46.6** — developing · rubric 0.24.0 · scored 2026-10-20
+
+| Facet | Score |
+|---|---|
+| Discoverability | 72.3 |
+| Contract quality | 26.5 |
+| Contract governance | 67.3 |
+| Operational transparency | 7.9 |
+| Developer ergonomics | 39.9 |
+| Access clarity | 73.2 |
+
+**Agent readiness 44.8** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | unknown |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+
+**Regulatory alignment 31.3** — Payments
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/konfetti/](https://apis.io/providers/konfetti/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for konfetti: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/konfetti/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
